@@ -493,40 +493,40 @@
 
                 <form action="https://formsubmit.co/5e145e0ffbc693448bb68a614e101b84" method="POST"
                       class="contact__form grid">
-                <!-- Honeypot -->
-                <label>
-                    <input type="text" name="_honey" style="display:none">
-                </label>
-                <!-- Disable Captcha -->
-                <input type="hidden" name="_captcha" value="false">
+                    <!-- Honeypot -->
+                    <label>
+                        <input type="text" name="_honey" style="display:none">
+                    </label>
+                    <!-- Disable Captcha -->
+                    <input type="hidden" name="_captcha" value="false">
 
-                <input type="hidden" id="redirectUrl" name="_next" value="#home">
+                    <input type="hidden" name="_next" value="https://www.msahin.com.tr/success.html">
 
-                <div class="contact__inputs grid">
-                    <div class="contact__content">
-                        <label for="name" class="contact__label">Name</label>
-                        <input type="text" id="name" class="contact__input" required>
+                    <div class="contact__inputs grid">
+                        <div class="contact__content">
+                            <label for="name" class="contact__label">Name</label>
+                            <input type="text" id="name" class="contact__input" required>
+                        </div>
+
+                        <div class="contact__content">
+                            <label for="email" class="contact__label">Email</label>
+                            <input type="email" id="email" class="contact__input" required>
+                        </div>
                     </div>
 
                     <div class="contact__content">
-                        <label for="email" class="contact__label">Email</label>
-                        <input type="email" id="email" class="contact__input" required>
+                        <label for="project-contact" class="contact__label">Topic</label>
+                        <input type="text" id="project-contact" class="contact__input" required>
                     </div>
-                </div>
 
-                <div class="contact__content">
-                    <label for="project-contact" class="contact__label">Topic</label>
-                    <input type="text" id="project-contact" class="contact__input" required>
-                </div>
+                    <div class="contact__content">
+                        <label for="message-contact" class="contact__label">Message</label>
+                        <textarea name="" cols="0" rows="7" id="message-contact" class="contact__input"></textarea>
+                    </div>
 
-                <div class="contact__content">
-                    <label for="message-contact" class="contact__label">Message</label>
-                    <textarea name="" cols="0" rows="7" id="message-contact" class="contact__input"></textarea>
-                </div>
-
-                <div>
-                    <input type="submit" class="button button--flex" value="Send Message">
-                </div>
+                    <div>
+                        <input type="submit" class="button button--flex" value="Send Message">
+                    </div>
                 </form>
             </div>
         </div>
