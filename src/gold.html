@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altın Fiyatları | Canlı Takip</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/src/favicon-32x32.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #16161f;
+            --border-color: #2a2a3a;
+            --gold-primary: #d4af37;
+            --gold-secondary: #f4d03f;
+            --gold-dark: #b8860b;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --green: #00d26a;
+            --red: #ff4757;
+            --green-bg: rgba(0, 210, 106, 0.1);
+            --red-bg: rgba(255, 71, 87, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+        }
+
+        .status-dot.offline {
+            background: var(--red);
+            box-shadow: 0 0 8px var(--red);
+        }
+
+        .status-label {
+            color: var(--text-muted);
+        }
+
+        .status-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .refresh-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: var(--gold-primary);
+            color: var(--bg-primary);
+        }
+
+        .refresh-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .refresh-btn.loading .refresh-icon {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--gold-primary);
+            border-color: var(--gold-primary);
+            color: var(--bg-primary);
+        }
+
+        .table-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--bg-card);
+        }
+
+        th {
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th:last-child {
+            text-align: right;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(212, 175, 55, 0.03);
+        }
+
+        .gold-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .gold-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .gold-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gold-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .gold-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .price {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .price-buy {
+            color: var(--green);
+        }
+
+        .price-sell {
+            color: var(--gold-secondary);
+        }
+
+        .change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+
+        .change.positive {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        .change.negative {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+
+        .change.neutral {
+            background: rgba(160, 160, 176, 0.1);
+            color: var(--text-muted);
+        }
+
+        .change-cell {
+            text-align: right;
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            color: var(--text-muted);
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--red);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+
+        footer a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 12px; }
+            header { padding: 24px 0 20px; }
+            h1 { font-size: 1.5rem; }
+            .status-bar { flex-direction: column; gap: 16px; }
+            .status-left { flex-direction: column; gap: 8px; }
+            th, td { padding: 12px 10px; font-size: 0.8rem; }
+            .gold-icon { width: 28px; height: 28px; font-size: 12px; }
+            .gold-title { font-size: 0.85rem; }
+            .price { font-size: 0.85rem; }
+            .change { padding: 4px 8px; font-size: 0.75rem; }
+            .category-tabs { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 8px; }
+            .tab-btn { white-space: nowrap; padding: 8px 16px; }
+        }
+
+        @media (max-width: 600px) {
+            .hide-mobile { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">💰</div>
+                <h1>Altın Fiyatları</h1>
+            </div>
+            <p class="subtitle">Canlı piyasa verileri</p>
+        </header>
+
+        <div class="status-bar">
+            <div class="status-left">
+                <div class="status-item">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span class="status-label">Durum:</span>
+                    <span class="status-value" id="statusText">Bağlanıyor...</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Güncelleme:</span>
+                    <span class="status-value" id="lastUpdate">--:--:--</span>
+                </div>
+            </div>
+            <button class="refresh-btn" id="refreshBtn" onclick="fetchGoldPrices()">
+                <span class="refresh-icon">↻</span>
+                Yenile
+            </button>
+        </div>
+
+        <div class="category-tabs">
+            <button class="tab-btn active" data-category="all">Tümü</button>
+            <button class="tab-btn" data-category="popular">Popüler</button>
+            <button class="tab-btn" data-category="coin">Altın Sikke</button>
+            <button class="tab-btn" data-category="jewelry">Takı & Bilezik</button>
+            <button class="tab-btn" data-category="ons">ONS & Döviz</button>
+        </div>
+
+        <div class="table-container">
+            <div id="tableContent">
+                <div class="loading-container">
+                    <div class="loader"></div>
+                    <p>Fiyatlar yükleniyor...</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Veriler bilgi amaçlıdır, yatırım tavsiyesi değildir.</p>
+            <p style="margin-top: 8px;">
+                <a href="/">← Ana Sayfa</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const categories = {
+            popular: ['Gram Altın', 'Çeyrek Altın', 'Yarım Altın', 'Tam Altın', 'Cumhuriyet Altını', 'ONS Altın'],
+            coin: ['Çeyrek Altın', 'Yarım Altın', 'Tam Altın', 'Cumhuriyet Altını', 'Ata Altın', 'Hamit Altın', 'Reşat Lira Altın', 'Reşat İkibuçuk Altın', 'Reşat Beşibiryerde', 'Beşli Altın', 'İkibuçuk Altın', 'Çeyrek Altın Eski', 'Yarım Altın Eski', 'Tam Altın Eski'],
+            jewelry: ['22 Ayar Bilezik', '14 Ayar Altın', '18 Ayar Altın', 'Ziynet Altın', 'Has Altın'],
+            ons: ['ONS Altın', 'ONS EUR', 'Gümüş', 'Altın Gümüş']
+        };
+
+        const goldIcons = {
+            'Gram Altın': '🪙', 'ONS Altın': '🌍', 'Çeyrek Altın': '🥇', 'Yarım Altın': '🏅',
+            'Tam Altın': '🎖️', 'Cumhuriyet Altını': '🏆', 'Ata Altın': '👑', 'Hamit Altın': '👑',
+            'Reşat Lira Altın': '🎯', '22 Ayar Bilezik': '📿', '14 Ayar Altın': '💍',
+            '18 Ayar Altın': '💎', 'Has Altın': '✨', 'Gümüş': '🥈', 'Altın Gümüş': '🥈',
+            'ONS EUR': '💶', 'Ziynet Altın': '💫', 'Gremse Altın': '🏛️', 'Beşli Altın': '🎰'
+        };
+
+        let allData = [];
+        let currentCategory = 'all';
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                renderTable(filterData(allData));
+            });
+        });
+
+        function filterData(data) {
+            if (currentCategory === 'all') return data;
+            const categoryItems = categories[currentCategory] || [];
+            return data.filter(item => categoryItems.includes(item.name));
+        }
+
+        async function fetchGoldPrices() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const lastUpdate = document.getElementById('lastUpdate');
+
+            refreshBtn.disabled = true;
+            refreshBtn.classList.add('loading');
+
+            try {
+                const response = await fetch('/api/gold');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    allData = result.data;
+                    renderTable(filterData(allData));
+                    statusDot.classList.remove('offline');
+                    statusText.textContent = result.source === 'live' ? 'Canlı' : 'Önbellek';
+                    lastUpdate.textContent = new Date().toLocaleTimeString('tr-TR');
+                } else {
+                    throw new Error('Veri alınamadı');
+                }
+            } catch (error) {
+                statusDot.classList.add('offline');
+                statusText.textContent = 'Hata';
+                document.getElementById('tableContent').innerHTML = `
+                    <div class="error-container">
+                        <p>⚠️ Fiyatlar yüklenemedi</p>
+                        <p style="font-size: 0.85rem; margin-top: 10px; color: var(--text-muted);">
+                            Lütfen daha sonra tekrar deneyin
+                        </p>
+                    </div>
+                `;
+            } finally {
+                refreshBtn.disabled = false;
+                refreshBtn.classList.remove('loading');
+            }
+        }
+
+        function renderTable(data) {
+            const tableContent = document.getElementById('tableContent');
+
+            if (!data || data.length === 0) {
+                tableContent.innerHTML = `<div class="loading-container"><p>Bu kategoride veri bulunamadı</p></div>`;
+                return;
+            }
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Altın Türü</th>
+                            <th>Alış (₺)</th>
+                            <th>Satış (₺)</th>
+                            <th class="change-cell">Değişim</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(item => {
+                const name = item.name || 'Bilinmiyor';
+                const buying = item.buying || item.buyingstr || '-';
+                const selling = item.selling || item.sellingstr || '-';
+                const rate = item.rate || 0;
+                const time = item.time || '';
+                const isPositive = rate > 0;
+                const isNegative = rate < 0;
+                const changeClass = isPositive ? 'positive' : (isNegative ? 'negative' : 'neutral');
+                const changePrefix = isPositive ? '+' : '';
+                const icon = goldIcons[name] || '💰';
+
+                html += `
+                    <tr>
+                        <td>
+                            <div class="gold-name">
+                                <div class="gold-icon">${icon}</div>
+                                <div class="gold-info">
+                                    <span class="gold-title">${name}</span>
+                                    <span class="gold-time">${time}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="price price-buy">${formatPrice(buying)}</td>
+                        <td class="price price-sell">${formatPrice(selling)}</td>
+                        <td class="change-cell">
+                            <span class="change ${changeClass}">${changePrefix}${rate.toFixed(2)}%</span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            tableContent.innerHTML = html;
+        }
+
+        function formatPrice(price) {
+            if (!price || price === '-') return '-';
+            const num = typeof price === 'string' ? parseFloat(price.replace(',', '.')) : price;
+            if (isNaN(num)) return price;
+            return num.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchGoldPrices);
+        setInterval(fetchGoldPrices, 60000);
+    </script>
+</body>
+</html>

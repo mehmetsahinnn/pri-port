@@ -1,32 +1,22 @@
-// Vercel Serverless Function Example
+// Vercel Serverless Function - Hello API
 // Endpoint: /api/hello
-// Bu dosyayı ileride ihtiyacına göre genişletebilirsin
 
 export default function handler(req, res) {
-  const { method } = req;
-
-  // CORS headers
+  // Security headers
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
 
-  if (method === 'OPTIONS') {
+  if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  if (method === 'GET') {
+  if (req.method === 'GET') {
     return res.status(200).json({
       message: 'Merhaba! Backend çalışıyor 🚀',
       timestamp: new Date().toISOString(),
       author: 'Mehmet Şahin'
-    });
-  }
-
-  if (method === 'POST') {
-    const { name } = req.body || {};
-    return res.status(200).json({
-      message: `Merhaba ${name || 'Ziyaretçi'}! 👋`,
-      timestamp: new Date().toISOString()
     });
   }
 
