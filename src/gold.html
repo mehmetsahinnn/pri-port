@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altın Fiyatları | Canlı Takip</title>
+    <title>Altın ve Döviz Fiyatları | Canlı Takip</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/src/favicon-32x32.png">
     <style>
         * {
@@ -276,11 +276,11 @@
         }
 
         .price-buy {
-            color: var(--green);
+            color: #AF9E9EFF;
         }
 
         .price-sell {
-            color: var(--gold-secondary);
+            color: #AF9E9EFF;
         }
 
         .change {
@@ -382,9 +382,9 @@
         <header>
             <div class="logo">
                 <div class="logo-icon">💰</div>
-                <h1>Altın Fiyatları</h1>
+                <h1>Altın ve Döviz Fiyatları</h1>
             </div>
-            <p class="subtitle">Canlı piyasa verileri</p>
+            <p class="subtitle">Canlı piyasa verileri - 5 dakikalık önbellek</p>
         </header>
 
         <div class="status-bar">
@@ -405,13 +405,6 @@
             </button>
         </div>
 
-        <div class="category-tabs">
-            <button class="tab-btn active" data-category="all">Tümü</button>
-            <button class="tab-btn" data-category="popular">Popüler</button>
-            <button class="tab-btn" data-category="coin">Altın Sikke</button>
-            <button class="tab-btn" data-category="jewelry">Takı & Bilezik</button>
-            <button class="tab-btn" data-category="ons">ONS & Döviz</button>
-        </div>
 
         <div class="table-container">
             <div id="tableContent">
@@ -431,38 +424,14 @@
     </div>
 
     <script>
-        const categories = {
-            popular: ['Gram Altın', 'Çeyrek Altın', 'Yarım Altın', 'Tam Altın', 'Cumhuriyet Altını', 'ONS Altın'],
-            coin: ['Çeyrek Altın', 'Yarım Altın', 'Tam Altın', 'Cumhuriyet Altını', 'Ata Altın', 'Hamit Altın', 'Reşat Lira Altın', 'Reşat İkibuçuk Altın', 'Reşat Beşibiryerde', 'Beşli Altın', 'İkibuçuk Altın', 'Çeyrek Altın Eski', 'Yarım Altın Eski', 'Tam Altın Eski'],
-            jewelry: ['22 Ayar Bilezik', '14 Ayar Altın', '18 Ayar Altın', 'Ziynet Altın', 'Has Altın'],
-            ons: ['ONS Altın', 'ONS EUR', 'Gümüş', 'Altın Gümüş']
-        };
-
         const goldIcons = {
-            'Gram Altın': '🪙', 'ONS Altın': '🌍', 'Çeyrek Altın': '🥇', 'Yarım Altın': '🏅',
-            'Tam Altın': '🎖️', 'Cumhuriyet Altını': '🏆', 'Ata Altın': '👑', 'Hamit Altın': '👑',
-            'Reşat Lira Altın': '🎯', '22 Ayar Bilezik': '📿', '14 Ayar Altın': '💍',
-            '18 Ayar Altın': '💎', 'Has Altın': '✨', 'Gümüş': '🥈', 'Altın Gümüş': '🥈',
-            'ONS EUR': '💶', 'Ziynet Altın': '💫', 'Gremse Altın': '🏛️', 'Beşli Altın': '🎰'
+            'Gram Altın': '🥇',
+            'Amerikan Doları': '💵',
+            'Euro': '💶',
+            'default': '💰'
         };
 
         let allData = [];
-        let currentCategory = 'all';
-
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = btn.dataset.category;
-                renderTable(filterData(allData));
-            });
-        });
-
-        function filterData(data) {
-            if (currentCategory === 'all') return data;
-            const categoryItems = categories[currentCategory] || [];
-            return data.filter(item => categoryItems.includes(item.name));
-        }
 
         async function fetchGoldPrices() {
             const refreshBtn = document.getElementById('refreshBtn');
@@ -479,9 +448,15 @@
 
                 if (result.success && result.data) {
                     allData = result.data;
-                    renderTable(filterData(allData));
+                    renderTable(allData);
                     statusDot.classList.remove('offline');
-                    statusText.textContent = result.source === 'live' ? 'Canlı' : 'Önbellek';
+
+                    if (result.cached) {
+                        statusText.textContent = `Önbellek (${result.cacheAge}s)`;
+                    } else {
+                        statusText.textContent = result.source === 'live' ? 'Canlı' : 'Yedek Veri';
+                    }
+
                     lastUpdate.textContent = new Date().toLocaleTimeString('tr-TR');
                 } else {
                     throw new Error('Veri alınamadı');
@@ -507,7 +482,7 @@
             const tableContent = document.getElementById('tableContent');
 
             if (!data || data.length === 0) {
-                tableContent.innerHTML = `<div class="loading-container"><p>Bu kategoride veri bulunamadı</p></div>`;
+                tableContent.innerHTML = `<div class="loading-container"><p>Veri bulunamadı</p></div>`;
                 return;
             }
 
@@ -515,7 +490,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Altın Türü</th>
+                            <th>Kur/Emtia</th>
                             <th>Alış (₺)</th>
                             <th>Satış (₺)</th>
                             <th class="change-cell">Değişim</th>
@@ -526,15 +501,15 @@
 
             data.forEach(item => {
                 const name = item.name || 'Bilinmiyor';
-                const buying = item.buying || item.buyingstr || '-';
-                const selling = item.selling || item.sellingstr || '-';
+                const buying = item.buying;
+                const selling = item.selling;
                 const rate = item.rate || 0;
                 const time = item.time || '';
                 const isPositive = rate > 0;
                 const isNegative = rate < 0;
                 const changeClass = isPositive ? 'positive' : (isNegative ? 'negative' : 'neutral');
                 const changePrefix = isPositive ? '+' : '';
-                const icon = goldIcons[name] || '💰';
+                const icon = goldIcons[name] || goldIcons['default'];
 
                 html += `
                     <tr>
@@ -568,7 +543,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', fetchGoldPrices);
-        setInterval(fetchGoldPrices, 60000);
+        setInterval(fetchGoldPrices, 30000); // Refresh every 30 seconds
     </script>
 </body>
 </html>

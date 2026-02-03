@@ -41,10 +41,20 @@
                         <i class="uil uil-scenery nav_icon"></i> Portfolio
                     </a>
                 </li>
-                <li class="nav__item">
+                <li class="nav__item" id="contact-menu-item">
                     <a href="#contact" class="nav__link">
                         <i class="uil uil-message nav_icon"></i> Contact Me
                     </a>
+                </li>
+                <li class="nav__item admin-menu" id="admin-menu" style="display: none;">
+                    <a href="#" class="nav__link admin-link" id="api-menu-toggle">
+                        <i class="uil uil-setting nav_icon"></i> API Access
+                    </a>
+                    <ul class="admin-submenu" id="api-submenu">
+                        <li><a href="/api/hello" target="_blank" class="admin-submenu-link">Hello API</a></li>
+                        <li><a href="/api/gold" target="_blank" class="admin-submenu-link">Gold API</a></li>
+                        <li><a href="/gold.html" target="_blank" class="admin-submenu-link">Gold Page</a></li>
+                    </ul>
                 </li>
             </ul>
             <i class="uil uil-times nav__close" id="nav-close"></i>
@@ -83,9 +93,24 @@
                 <p class="home__description">I am a Computer Engineering student with backend development skills
                     in Python, Java, and Node.js. I understand SQL and RESTful APIs.
                     I write clean, efficient code and am always ready to learn and contribute.</p>
-                <a href="#contact" class="button button--flex">
-                    Contact Me<i class="uil uil-message button__icon"></i>
-                </a>
+
+                <!-- Contact Button / Admin Dropdown -->
+                <div class="home-contact-wrapper" id="home-contact-wrapper">
+                    <a href="#contact" class="button button--flex" id="home-contact-btn">
+                        Contact Me<i class="uil uil-message button__icon"></i>
+                    </a>
+                    <ul class="home-admin-submenu" id="home-admin-submenu" style="display: none;">
+                        <li><a href="/api/hello" target="_blank" class="home-admin-link">
+                            <i class="uil uil-brackets-curly"></i> Hello API
+                        </a></li>
+                        <li><a href="/api/gold" target="_blank" class="home-admin-link">
+                            <i class="uil uil-gold"></i> Gold API
+                        </a></li>
+                        <li><a href="/gold.html" target="_blank" class="home-admin-link">
+                            <i class="uil uil-chart-line"></i> Gold Page
+                        </a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -99,12 +124,9 @@
 
             <div class="about__data">
                 <p class="about__description">
-                    I am a Computer Engineering student with a strong background in backend development. I am proficient
-                    in Python, Java Spring, and Node.js
-                    . I have experience with SQL databases and RESTful APIs. I am also
-                    interested in data science and have worked with Python libraries such as matplotlib, scikit-learn. &nbsp;&nbsp;&nbsp;&nbsp;
-                    I am
-                    dedicated to writing clean, efficient code, and I am always eager to learn new things and contribute
+                    I am a Backend Computer Engineer. Proficient in Java Spring .
+                    I have experience with SQL databases and RESTful APIs. I am dedicated to writing clean,
+                    efficient code, and I am always eager to learn new things and contribute
                     to teams.
                 </p>
 
@@ -167,15 +189,6 @@
 
                         <div class="skills__data">
                             <div class="skills__titles">
-                                <h3 class="skills__name">Django</h3>
-                                <div class="skills__number"></div>
-                            </div>
-                            <div class="skills__bar">
-                                <div class="skills__percentage skills__django"></div>
-                            </div>
-                        </div>
-                        <div class="skills__data">
-                            <div class="skills__titles">
                                 <h3 class="skills__name">MySQL</h3>
                                 <div class="skills__number"></div>
                             </div>
@@ -186,7 +199,7 @@
 
                         <div class="skills__data">
                             <div class="skills__titles">
-                                <h3 class="skills__name">NodeJS/Express</h3>
+                                <h3 class="skills__name">Go</h3>
                                 <div class="skills__number"></div>
                             </div>
                             <div class="skills__bar">
@@ -310,11 +323,11 @@
                 <div class="qualification__content qualification__active" data-content id="education">
                     <div class="qualification__data">
                         <div>
-                            <h3 class="qualification__title">B.Sc. in Computer Science</h3>
-                            <span class="qualification__subtitle">Eskişehir Technical University</span>
+                            <h3 class="qualification__title">M.Sc. in Computer Engineering</h3>
+                            <span class="qualification__subtitle">Istanbul Technical University</span>
                             <div class="qualification__calendar">
                                 <i class="uil uil-calendar-alt"></i>
-                                October, 2020 - June, 2025
+                                October, 2025 - June, 2027
                             </div>
                         </div>
 
@@ -551,10 +564,24 @@
             </div>
         </div>
 
-        <p class="footer__copy">&#169; Mehmet Şahin. All rights reserved.</p>
+        <p class="footer__copy">&#169; Mehmet Şahin. <span id="admin-trigger" style="cursor: pointer;">All rights reserved.</span></p>
     </div>
 
 </footer>
+
+<div id="admin-modal" class="admin-modal" style="display: none;">
+    <div class="admin-modal-content">
+        <span class="admin-close">&times;</span>
+        <h3>Admin Login</h3>
+        <form id="admin-login-form">
+            <input type="text" id="admin-username" placeholder="Username" required>
+            <input type="password" id="admin-password" placeholder="Password" required>
+            <button type="submit" class="button button--flex">Login</button>
+            <p id="login-error" style="color: red; display: none; margin-top: 10px;">Invalid credentials!</p>
+        </form>
+    </div>
+</div>
+
 <a href="" class="scrollup" id="scroll-up">
     <i class="uil uil-arrow-up scroll__icon"></i>
 </a>
