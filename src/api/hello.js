@@ -15,7 +15,7 @@ export default function handler(req, res) {
   if (req.method === 'GET') {
     return res.status(200).json({
       message: 'Merhaba! Backend çalışıyor 🚀',
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toLocaleDateString('en-GB', {timeZone: 'Europe/Istanbul', hour12: false}),
       author: 'Mehmet Şahin'
     });
   }
