@@ -1503,6 +1503,45 @@ img{
     border-color: var(--first-color);
 }
 
+/* Segmented control wrapping language + theme toggle */
+.nav__btns-group {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--first-color-lighter);
+    border-radius: 0.6rem;
+    overflow: hidden;
+    margin-right: var(--mb-1);
+    background: transparent;
+}
+.nav__btns-group > * + * {
+    border-left: 1px solid var(--first-color-lighter);
+}
+/* Strip individual borders/margins so children sit flush inside the frame */
+.nav__btns-group .lang-button,
+.nav__btns-group .change-theme {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--title-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem 0.65rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+}
+.nav__btns-group .change-theme {
+    font-size: 1.05rem;
+    line-height: 1;
+}
+.nav__btns-group .lang-button:hover,
+.nav__btns-group .change-theme:hover {
+    background: var(--first-color);
+    color: #fff;
+}
+
 /* Skills — 2x2 card grid replacing the bar layout */
 .skills__grid {
     display: grid;

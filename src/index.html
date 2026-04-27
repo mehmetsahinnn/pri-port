@@ -61,8 +61,12 @@
             <i class="uil uil-times nav__close" id="nav-close"></i>
         </div>
         <div class="nav__btns">
-            <button class="lang-button" id="lang-button" title="Language">EN</button>
-            <i class="uil uil-moon change-theme" id="theme-button"></i>
+            <div class="nav__btns-group" role="group" aria-label="Preferences">
+                <button class="lang-button" id="lang-button" title="Language">EN</button>
+                <button class="change-theme" id="theme-button" title="Theme" aria-label="Toggle theme">
+                    <i class="uil uil-moon"></i>
+                </button>
+            </div>
             <div class="nav__toggle" id="nav-toggle">
                 <i class="uil uil-apps"></i>
             </div>
@@ -93,7 +97,7 @@
                 <h1 class="home__title" data-i18n="home_title">Hi, I'm Mehmet</h1>
                 <h3 class="home__title" data-i18n="home_subtitle">Backend Developer</h3>
                 <h3 class="home__subtitle" data-i18n="home_subtitle2">M.Sc. @ ITU | Turkcell</h3>
-                <p class="home__description" data-i18n="home_desc">Backend developer at Turkcell, building microservices that serve millions of users.
+                <p class="home__description" data-i18n="home_desc">Backend developer at Turkcell, working in a team which builds microservices that serve millions of users.
                     Pursuing M.Sc. in Computer Engineering at Istanbul Technical University.
                     Focused on scalable APIs, clean architecture, and developer tooling.</p>
 
@@ -130,8 +134,8 @@
 
             <div class="about__data">
                 <p class="about__description" data-i18n="about_desc">
-                    I build and maintain high-traffic backend services at Turkcell's digital channels,
-                    working across service integrations, API gateways, and SOAP/REST adapters.
+                    I work in a team that builds and maintains high-traffic backend services at Turkcell,
+                    working across service integrations, integrating some design patterns.
                     Beyond my day job, I develop IDE plugins, macOS utilities, and monitoring tools.
                     Currently researching at ITU while shipping production code every week.
                 </p>
@@ -266,6 +270,7 @@
                             <span class="qualification__line"></span>
                         </div>
                     </div>
+
                     <div class="qualification__data">
                         <div></div>
                         <div>
@@ -273,6 +278,17 @@
                             <span class="qualification__line"></span>
                         </div>
 
+                        <div>
+                            <h3 class="qualification__title">B.Sc. in Computer Engineering</h3>
+                            <span class="qualification__subtitle">Eskisehir Technical University</span>
+                            <div class="qualification__calendar">
+                                <i class="uil uil-calendar-alt"></i>
+                                September, 2020 - June, 2025
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="qualification__data">
                         <div>
                             <h3 class="qualification__title">
                                 Web Programming with React Certificate</h3>
@@ -282,9 +298,19 @@
                                 August 2023
                             </div>
                         </div>
+
+                        <div>
+                            <span class="qualification__rounder"></span>
+                            <span class="qualification__line"></span>
+                        </div>
                     </div>
 
                     <div class="qualification__data">
+                        <div></div>
+                        <div>
+                            <span class="qualification__rounder"></span>
+                        </div>
+
                         <div>
                             <h3 class="qualification__title">Mid-Level Web Development With Java Certificate</h3>
                             <span class="qualification__subtitle">Patika Dev</span>
@@ -293,14 +319,43 @@
                                 July 2023
                             </div>
                         </div>
-
-                        <div>
-                            <span class="qualification__rounder"></span>
-                        </div>
                     </div>
                 </div>
 
                 <div class="qualification__content" data-content id="work">
+                    <div class="qualification__data">
+                        <div>
+                            <h3 class="qualification__title">Software Developer</h3>
+                            <span class="qualification__subtitle">Turkcell</span>
+                            <div class="qualification__calendar">
+                                <i class="uil uil-calendar-alt"></i>
+                                August, 2024 -
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="qualification__rounder"></span>
+                            <span class="qualification__line"></span>
+                        </div>
+                    </div>
+
+                    <div class="qualification__data">
+                        <div></div>
+                        <div>
+                            <span class="qualification__rounder"></span>
+                            <span class="qualification__line"></span>
+                        </div>
+                        <div>
+                            <h3 class="qualification__title">
+                                Part Time Software Developer</h3>
+                            <span class="qualification__subtitle">Turkcell</span>
+                            <div class="qualification__calendar">
+                                <i class="uil uil-calendar-alt"></i>
+                                August, 2024 -
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="qualification__data">
                         <div>
                             <h3 class="qualification__title">Intern</h3>
@@ -313,22 +368,6 @@
 
                         <div>
                             <span class="qualification__rounder"></span>
-                            <span class="qualification__line"></span>
-                        </div>
-                    </div>
-                    <div class="qualification__data">
-                        <div></div>
-                        <div>
-                            <span class="qualification__rounder"></span>
-                        </div>
-                        <div>
-                            <h3 class="qualification__title">
-                                Part Time Software Developer</h3>
-                            <span class="qualification__subtitle">Turkcell</span>
-                            <div class="qualification__calendar">
-                                <i class="uil uil-calendar-alt"></i>
-                                August, 2024 - 
-                            </div>
                         </div>
                     </div>
                   </div>
