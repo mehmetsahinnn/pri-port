@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <title>Nazar Duaları - Mehmet Şahin</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/src/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/src/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/src/favicon-16x16.png">
+    <link rel="manifest" href="/src/site.webmanifest">
+    <style>
+        .nazar-container {
+            min-height: 100vh;
+            padding: 6rem 1rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .nazar-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .nazar-header h1 {
+            font-size: var(--h1-font-size);
+            color: var(--title-color);
+            margin-bottom: 1rem;
+        }
+        .nazar-header p {
+            color: var(--text-color);
+            font-size: var(--normal-font-size);
+        }
+        .prayer-card {
+            background-color: var(--container-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 16px hsla(var(--hue-color), 66%, 45%, 0.15);
+            transition: transform 0.3s;
+        }
+        .prayer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px hsla(var(--hue-color), 66%, 45%, 0.25);
+        }
+        .prayer-title {
+            color: var(--first-color);
+            font-size: var(--h2-font-size);
+            font-weight: var(--font-semi-bold);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .bismillah {
+            text-align: center;
+            color: var(--first-color-alt);
+            font-size: var(--h3-font-size);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            font-weight: var(--font-medium);
+        }
+        .verse {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+        .verse-number {
+            display: inline-block;
+            background-color: var(--first-color-lighter);
+            color: var(--first-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-weight: var(--font-semi-bold);
+            font-size: var(--small-font-size);
+            margin-right: 0.5rem;
+        }
+        .verse-text {
+            color: var(--text-color);
+            font-size: var(--normal-font-size);
+            line-height: 1.8;
+        }
+        .ayetel-kursi .verse-text {
+            text-align: justify;
+        }
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--first-color);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: var(--font-medium);
+            transition: background-color 0.3s;
+            margin: 2rem auto;
+            width: fit-content;
+        }
+        .back-button:hover {
+            background-color: var(--first-color-alt);
+        }
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--first-color-lighter), transparent);
+            margin: 2rem 0;
+        }
+        @media screen and (max-width: 768px) {
+            .nazar-container {
+                padding: 5rem 1rem 2rem;
+            }
+            .prayer-card {
+                padding: 1.5rem;
+            }
+            .nazar-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+        body.dark-theme .prayer-card {
+            box-shadow: 0 2px 16px hsla(0, 0%, 0%, 0.3);
+        }
+        body.dark-theme .prayer-card:hover {
+            box-shadow: 0 4px 20px hsla(0, 0%, 0%, 0.5);
+        }
+    </style>
+</head>
+<body>
+<header class="header" id="header">
+    <nav class="nav container">
+        <a href="index.html" class="nav__logo">Mehmet Şahin</a>
+        <div class="nav__btns">
+            <i class="uil uil-moon change-theme" id="theme-button"></i>
+        </div>
+    </nav>
+</header>
+<main class="nazar-container">
+    <div class="nazar-header">
+        <h1>🧿 Nazar Duaları</h1>
+        <p>Ayetel Kürsi, Felak Suresi ve Nas Suresi</p>
+    </div>
+    <div class="prayer-card ayetel-kursi">
+        <h2 class="prayer-title">Ayetel Kürsi</h2>
+        <div class="bismillah">Bismillahirrahmânirrahîm</div>
+        <div class="verse">
+            <span class="verse-number">255. Ayet</span>
+            <p class="verse-text">
+                Allâhü lâ ilâhe illâ hüvel hayyül kayyûm, lâ te'huzühu sinetün velâ nevm, lehu mâ fissemâvâti ve ma fil'ard,
+                men zellezi yeşfeu indehu illâ bi'iznih, ya'lemü mâ beyne eydiyhim vemâ halfehüm, velâ yü-hîtûne bi'şey'in
+                min ilmihî illâ bima şâe vesia kürsiyyühüssemâvâti vel'ard, velâ yeûdühû hıfzuhümâ ve hüvel aliyyül azim.
+            </p>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="prayer-card">
+        <h2 class="prayer-title">Felak Suresi</h2>
+        <div class="bismillah">Bismillahirrahmânirrahîm</div>
+        <div class="verse">
+            <span class="verse-number">1. Ayet</span>
+            <p class="verse-text">Kul e'ûzü birabbil felak</p>
+        </div>
+        <div class="verse">
+            <span class="verse-number">2. Ayet</span>
+            <p class="verse-text">Min şerri mâ halak</p>
+        </div>
+        <div class="verse">
+            <span class="verse-number">3. Ayet</span>
+            <p class="verse-text">Ve min şerri ğasikın izâ vekab</p>
+        </div>
+        <div class="verse">
+            <span class="verse-number">4. Ayet</span>
+            <p class="verse-text">Ve min şerrinneffâsâti fil'ukad</p>
+        </div>
+        <div class="verse">
+            <span class="verse-number">5. Ayet</span>
+            <p class="verse-text">Ve min şerri hâsidin izâ hased</p>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="prayer-card">
+        <h2 class="prayer-title">Nas Suresi</h2>
+        <div class="bismillah">Bismillahirrahmânirrahîm</div>
+        <div class="verse">
+            <span class="verse-number">1. Ayet</span>
+            <p class="verse-text">Kul e'ûzü birabbinnâs</p>
+        </div>
+        <div class="verse">
+            <span class="verse-number">2. Ayet</span>
+            <p class="verse-text">Melikinnâs</p>
+        </div>
+        <div class="verse">
+            <span class="verse-number">3. Ayet</span>
+            <p class="verse-text">İlâhinnâs</p>
+        </div>
+        <div class="verse">
+            <span class="verse-number">4. Ayet</span>
+            <p class="verse-text">Min şerrilvesvâsilhannâs</p>
+        </div>
+        <div class="verse">
+            <span class="verse-number">5. Ayet</span>
+            <p class="verse-text">Ellezî yüvesvisü fî sudûrinnâsi</p>
+        </div>
+        <div class="verse">
+            <span class="verse-number">6. Ayet</span>
+            <p class="verse-text">Minelcinneti vennâs</p>
+        </div>
+    </div>
+    <a href="index.html" class="back-button">
+        <i class="uil uil-arrow-left"></i>
+        Ana Sayfaya Dön
+    </a>
+</main>
+<script>
+    const themeButton = document.getElementById('theme-button');
+    const darkTheme = 'dark-theme';
+    const iconTheme = 'uil-sun';
+    const selectedTheme = localStorage.getItem('selected-theme');
+    const selectedIcon = localStorage.getItem('selected-icon');
+    const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'dark' : 'light';
+    const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'uil-moon' : 'uil-sun';
+    if (selectedTheme) {
+        document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme);
+        themeButton.classList[selectedIcon === 'uil-moon' ? 'add' : 'remove'](iconTheme);
+    }
+    themeButton.addEventListener('click', () => {
+        document.body.classList.toggle(darkTheme);
+        themeButton.classList.toggle(iconTheme);
+        localStorage.setItem('selected-theme', getCurrentTheme());
+        localStorage.setItem('selected-icon', getCurrentIcon());
+    });
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-// Vercel Serverless Function - Altın ve Döviz Fiyatları API
+// Vercel Serverless Function - Altın ve Döviz Fiyatları API (Web Scraping)
 // Endpoint: /api/gold
 
 // Cache storage (5 minutes)
@@ -32,41 +32,34 @@ export default async function handler(req, res) {
   }
 
   try {
-    const apiKey = process.env.RAPIDAPI_KEY || 'd3fa93a4e8msh300lacc9df3a0e622p169cf3jsnb58dfadc2d11';
-
-    const response = await fetch('https://currency-and-gold-prices-api-in-turkish-lira.p.rapidapi.com/economy/currency/exchange-rate?code=USD%2Cgram-altin%2CEUR&type=gold', {
+    // Fetch HTML from haremaltin.com
+    const response = await fetch('https://www.haremaltin.com/', {
       method: 'GET',
       headers: {
-        'x-rapidapi-host': 'currency-and-gold-prices-api-in-turkish-lira.p.rapidapi.com',
-        'x-rapidapi-key': apiKey
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7'
       }
     });
 
     if (!response.ok) {
-      return res.status(200).json({
-        success: true,
-        source: 'fallback',
-        timestamp: new Date().toISOString(),
-        data: getFallbackData()
-      });
+      throw new Error('Failed to fetch data from haremaltin.com');
     }
 
-    const data = await response.json();
+    const html = await response.text();
 
-    // API'den gelen veri array formatında
-    const formattedData = Array.isArray(data) ? data.map(item => ({
-      name: item.FullName,
-      buying: item.buying,
-      selling: item.selling,
-      rate: item.changeRate,
-      time: item.lastupdate
-    })) : getFallbackData();
+    // Parse HTML to extract gold prices
+    const scrapedData = parseGoldData(html);
+
+    if (!scrapedData || scrapedData.length === 0) {
+      throw new Error('Failed to parse gold data');
+    }
 
     const responseData = {
       success: true,
-      source: 'live',
+      source: 'haremaltin.com',
       timestamp: new Date().toISOString(),
-      data: formattedData
+      data: scrapedData
     };
 
     // Store in cache
@@ -76,20 +69,70 @@ export default async function handler(req, res) {
     return res.status(200).json(responseData);
 
   } catch (error) {
+    console.error('Scraping error:', error);
     return res.status(200).json({
       success: true,
       source: 'fallback',
       timestamp: new Date().toISOString(),
       data: getFallbackData(),
-      note: 'API error'
+      note: 'Scraping error, using fallback data'
     });
   }
 }
 
+// Parse HTML to extract gold and currency prices
+function parseGoldData(html) {
+  const data = [];
+
+  try {
+    // Extract GRAM ALTIN (Gram Gold)
+    const gramAltinMatch = html.match(/id="tr__KULCEALTIN"[\s\S]*?id="alis__KULCEALTIN">([0-9.,]+)<[\s\S]*?id="satis__KULCEALTIN">([0-9.,]+)<[\s\S]*?id="yuzde__KULCEALTIN">%([0-9.,]+)</);
+    if (gramAltinMatch) {
+      data.push({
+        name: 'Gram Altın',
+        buying: Number.parseFloat(gramAltinMatch[1].replace('.', '').replace(',', '.')),
+        selling: Number.parseFloat(gramAltinMatch[2].replace('.', '').replace(',', '.')),
+        rate: Number.parseFloat(gramAltinMatch[3].replace(',', '.')),
+        time: new Date().toLocaleString('tr-TR')
+      });
+    }
+
+    // Extract USD (Dolar)
+    const usdMatch = html.match(/id="tr__(USD|DOLAR)"[\s\S]*?id="alis__(USD|DOLAR)">([0-9.,]+)<[\s\S]*?id="satis__(USD|DOLAR)">([0-9.,]+)<[\s\S]*?id="yuzde__(USD|DOLAR)">%([0-9.,]+)/);
+    if (usdMatch) {
+      data.push({
+        name: 'Amerikan Doları',
+        buying: Number.parseFloat(usdMatch[3].replace('.', '').replace(',', '.')),
+        selling: Number.parseFloat(usdMatch[5].replace('.', '').replace(',', '.')),
+        rate: Number.parseFloat(usdMatch[7].replace(',', '.')),
+        time: new Date().toLocaleString('tr-TR')
+      });
+    }
+
+    // Extract EUR (Euro)
+    const eurMatch = html.match(/id="tr__EUR"[\s\S]*?id="alis__EUR">([0-9.,]+)<[\s\S]*?id="satis__EUR">([0-9.,]+)<[\s\S]*?id="yuzde__EUR">%([0-9.,]+)/);
+    if (eurMatch) {
+      data.push({
+        name: 'Euro',
+        buying: Number.parseFloat(eurMatch[1].replace('.', '').replace(',', '.')),
+        selling: Number.parseFloat(eurMatch[2].replace('.', '').replace(',', '.')),
+        rate: Number.parseFloat(eurMatch[3].replace(',', '.')),
+        time: new Date().toLocaleString('tr-TR')
+      });
+    }
+
+  } catch (error) {
+    console.error('Parse error:', error);
+    return null;
+  }
+
+  return data.length > 0 ? data : null;
+}
+
 function getFallbackData() {
   return [
-    { name: 'Amerikan Doları', buying: 43.583, selling: 43.702, rate: 0.36, time: '2026-02-03 22:00:08' },
-    { name: 'Euro', buying: 51.287, selling: 51.539, rate: 0.54, time: '2026-02-03 22:00:08' },
-    { name: 'Gram Altın', buying: 6860.41, selling: 6861.27, rate: 0.01, time: '2026-02-03 22:00:11' }
+    { name: 'Amerikan Doları', buying: 43.583, selling: 43.702, rate: 0.36, time: '2026-02-03 1:1:1' },
+    { name: 'Euro', buying: 51.287, selling: 51.539, rate: 0.54, time: '2026-02-03 1:1:1' },
+    { name: 'Gram Altın', buying: 6860.41, selling: 6861.27, rate: 0.01, time: '2026-02-03 1:1:1' }
   ];
 }

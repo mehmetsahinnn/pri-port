@@ -188,9 +188,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactMenuItem = document.getElementById('contact-menu-item');
     const loginError = document.getElementById('login-error');
 
-    // Admin credentials (in production, use proper authentication)
-    const ADMIN_USERNAME = 'admin';
-    const ADMIN_PASSWORD = 'msahin2026';
+    // Credentials are NOT stored in client code. Authentication happens
+    // server-side via /api/admin-login (validates against env vars and
+    // returns a signed HMAC token). /api/admin-verify validates the token
+    // on subsequent loads. See README / .env.example for required env vars.
+    const ADMIN_TOKEN_KEY = 'admin-token';
 
     // Check if elements exist
     if (!adminTrigger || !adminModal || !adminClose || !adminLoginForm || !adminMenu || !loginError) {
@@ -209,10 +211,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Check if already logged in
-    if (localStorage.getItem('admin-logged-in') === 'true') {
-        toggleAdminMode(true);
-    }
+    // Verify any existing token with the server (signature + expiry).
+    // If invalid/expired, clear it and stay logged out.
+    (async function verifyExistingSession() {
+        const token = localStorage.getItem(ADMIN_TOKEN_KEY);
+        if (!token) return;
+        try {
+            const r = await fetch('/api/admin-verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+            });
+            if (r.ok) {
+                toggleAdminMode(true);
+            } else {
+                localStorage.removeItem(ADMIN_TOKEN_KEY);
+                // Backwards-compat: clear legacy boolean flag if present.
+                localStorage.removeItem('admin-logged-in');
+            }
+        } catch (_) {
+            // Network failure: leave as logged out, do not throw.
+        }
+    })();
 
     // Open modal on "All rights reserved" click (3 fast clicks)
     let clickCount = 0;
@@ -253,26 +273,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle login
-    adminLoginForm.addEventListener('submit', function(e) {
+    // Handle login — sends credentials to the serverless endpoint.
+    adminLoginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const username = document.getElementById('admin-username').value;
         const password = document.getElementById('admin-password').value;
+        const submitBtn = adminLoginForm.querySelector('button[type="submit"]');
 
-        if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-            localStorage.setItem('admin-logged-in', 'true');
-            toggleAdminMode(true);
-            adminModal.style.display = 'none';
-            loginError.style.display = 'none';
-            adminLoginForm.reset();
+        loginError.style.display = 'none';
+        if (submitBtn) submitBtn.disabled = true;
 
-            setTimeout(function() {
-                alert('Login successful! API Access menu is now visible.');
-            }, 100);
-        } else {
+        try {
+            const r = await fetch('/api/admin-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (r.ok) {
+                const data = await r.json();
+                if (data && data.token) {
+                    localStorage.setItem(ADMIN_TOKEN_KEY, data.token);
+                    toggleAdminMode(true);
+                    adminModal.style.display = 'none';
+                    adminLoginForm.reset();
+                    setTimeout(function() {
+                        alert('Login successful! API Access menu is now visible.');
+                    }, 100);
+                    return;
+                }
+            }
+
+            let msg = 'Invalid username or password!';
+            if (r.status === 429) msg = 'Too many attempts. Try again in a minute.';
+            else if (r.status >= 500) msg = 'Server error. Please try again later.';
             loginError.style.display = 'block';
-            loginError.textContent = 'Invalid username or password!';
+            loginError.textContent = msg;
+        } catch (err) {
+            loginError.style.display = 'block';
+            loginError.textContent = 'Network error. Please check your connection.';
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
         }
     });
 
@@ -309,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (homeContactBtn && homeAdminSubmenu) {
         // Check if logged in to change button behavior
         function updateHomeContactButton() {
-            const isLoggedIn = localStorage.getItem('admin-logged-in') === 'true';
+            const isLoggedIn = !!localStorage.getItem(ADMIN_TOKEN_KEY);
 
             if (isLoggedIn) {
                 // Show dropdown menu
@@ -369,3 +411,112 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+/*==================== TR / EN LANGUAGE TOGGLE ====================*/
+const i18n = {
+    en: {
+        nav_home: "Home", nav_about: "About", nav_skills: "Skills",
+        nav_portfolio: "Portfolio", nav_contact: "Contact Me",
+        home_title: "Hi, I'm Mehmet",
+        home_subtitle: "Backend Developer",
+        home_subtitle2: "M.Sc. @ ITU | Turkcell",
+        home_desc: "Backend developer at Turkcell, building microservices that serve millions of users. Pursuing M.Sc. in Computer Engineering at Istanbul Technical University. Focused on scalable APIs, clean architecture, and developer tooling.",
+        contact_me: "Contact Me",
+        about_title: "About Me",
+        about_subtitle: "My introduction",
+        about_desc: "I build and maintain high-traffic backend services at Turkcell's digital channels, working across service integrations, API gateways, and SOAP/REST adapters. Beyond my day job, I develop IDE plugins, macOS utilities, and monitoring tools. Currently researching at ITU while shipping production code every week.",
+        about_info_1: "Years <br> experience <br> in Computer Science",
+        about_info_2: "Companies <br> worked",
+        about_info_3: "Completed <br> projects",
+        download_cv: "Download CV",
+        skills_title: "Skills",
+        skills_subtitle: "My technical level",
+        skill_backend: "Backend Development",
+        skill_integration: "Integration & Data",
+        skill_languages: "Languages & Tools",
+        skill_frontend: "Frontend Development",
+        more_1: "More than 1 year",
+        more_2: "More than 2 years",
+        more_3: "More than 3 years",
+        qual_title: "Qualifications",
+        qual_subtitle: "My personal journey",
+        education: "Education",
+        work: "Work",
+        portfolio_title: "Portfolio",
+        portfolio_subtitle: "Most recent work",
+        contact_title: "Contact Me",
+        contact_subtitle: "Get in touch",
+        email: "Email",
+        location: "Location",
+        location_value: "Bursa, Turkey",
+        lets_connect: "Let's connect!",
+        connect_linkedin: "Connect on LinkedIn",
+        footer_subtitle: "Backend Developer",
+        all_rights: "All rights reserved."
+    },
+    tr: {
+        nav_home: "Anasayfa", nav_about: "Hakkımda", nav_skills: "Yetenekler",
+        nav_portfolio: "Projeler", nav_contact: "İletişim",
+        home_title: "Merhaba, ben Mehmet",
+        home_subtitle: "Backend Geliştirici",
+        home_subtitle2: "Y. Lisans @ İTÜ | Turkcell",
+        home_desc: "Turkcell'de milyonlarca kullanıcıya hizmet veren mikroservisler geliştiren bir backend geliştiricisiyim. İstanbul Teknik Üniversitesi'nde Bilgisayar Mühendisliği yüksek lisansını sürdürüyorum. Ölçeklenebilir API'ler, temiz mimari ve geliştirici araçlarına odaklıyım.",
+        contact_me: "İletişime Geç",
+        about_title: "Hakkımda",
+        about_subtitle: "Kısaca tanışalım",
+        about_desc: "Turkcell'in dijital kanallarında yüksek trafikli backend servislerini geliştiriyor ve sürdürüyorum; servis entegrasyonları, API gateway'ler ve SOAP/REST adaptörleri üzerinde çalışıyorum. Asıl işimin yanında IDE eklentileri, macOS araçları ve izleme araçları geliştiriyorum. İTÜ'de araştırma yaparken her hafta production'a kod gönderiyorum.",
+        about_info_1: "Yıl <br> Bilgisayar Bilimleri <br> deneyimi",
+        about_info_2: "Şirkette <br> çalıştı",
+        about_info_3: "Tamamlanmış <br> proje",
+        download_cv: "CV İndir",
+        skills_title: "Yetenekler",
+        skills_subtitle: "Teknik seviyem",
+        skill_backend: "Backend Geliştirme",
+        skill_integration: "Entegrasyon & Veri",
+        skill_languages: "Diller & Araçlar",
+        skill_frontend: "Frontend Geliştirme",
+        more_1: "1 yıldan fazla",
+        more_2: "2 yıldan fazla",
+        more_3: "3 yıldan fazla",
+        qual_title: "Nitelikler",
+        qual_subtitle: "Kişisel yolculuğum",
+        education: "Eğitim",
+        work: "İş",
+        portfolio_title: "Projeler",
+        portfolio_subtitle: "Son çalışmalar",
+        contact_title: "Bana Ulaş",
+        contact_subtitle: "Bağlantıda kal",
+        email: "E-posta",
+        location: "Konum",
+        location_value: "Bursa, Türkiye",
+        lets_connect: "Bağlanalım!",
+        connect_linkedin: "LinkedIn'de Bağlan",
+        footer_subtitle: "Backend Geliştirici",
+        all_rights: "Tüm hakları saklıdır."
+    }
+};
+
+let currentLang = localStorage.getItem('selected-lang') || 'en';
+
+function applyLang(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (i18n[lang] && i18n[lang][key]) {
+            el.innerHTML = i18n[lang][key];
+        }
+    });
+    const btn = document.getElementById('lang-button');
+    if (btn) btn.textContent = lang === 'en' ? 'EN' : 'TR';
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    applyLang(currentLang);
+    const langBtn = document.getElementById('lang-button');
+    if (langBtn) {
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'tr' : 'en';
+            localStorage.setItem('selected-lang', currentLang);
+            applyLang(currentLang);
+        });
+    }
+});

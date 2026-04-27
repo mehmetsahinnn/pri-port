@@ -1471,3 +1471,148 @@ img{
     color: var(--first-color);
 }
 
+/*==================== REDESIGN — SKILL TAGS, LANG, HOME SUBTITLE ====================*/
+
+/* Home subtitle (M.Sc. @ ITU | Turkcell) */
+.home__subtitle {
+    font-size: var(--small-font-size);
+    color: var(--first-color);
+    font-weight: var(--font-medium);
+    margin-bottom: var(--mb-1-5);
+    display: inline-block;
+}
+
+/* Language toggle button */
+.lang-button {
+    cursor: pointer;
+    color: var(--title-color);
+    font-size: 0.78rem;
+    font-weight: var(--font-semi-bold);
+    letter-spacing: 0.05em;
+    margin-right: var(--mb-1);
+    border: 1px solid var(--first-color-lighter);
+    background: transparent;
+    padding: 0.3rem 0.65rem;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    transition: 0.2s;
+}
+.lang-button:hover {
+    background: var(--first-color);
+    color: #fff;
+    border-color: var(--first-color);
+}
+
+/* Segmented control wrapping language + theme toggle */
+.nav__btns-group {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--first-color-lighter);
+    border-radius: 0.6rem;
+    overflow: hidden;
+    margin-right: var(--mb-1);
+    background: transparent;
+}
+.nav__btns-group > * + * {
+    border-left: 1px solid var(--first-color-lighter);
+}
+/* Strip individual borders/margins so children sit flush inside the frame */
+.nav__btns-group .lang-button,
+.nav__btns-group .change-theme {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--title-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem 0.65rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+}
+.nav__btns-group .change-theme {
+    font-size: 1.05rem;
+    line-height: 1;
+}
+.nav__btns-group .lang-button:hover,
+.nav__btns-group .change-theme:hover {
+    background: var(--first-color);
+    color: #fff;
+}
+
+/* Skills — 2x2 card grid replacing the bar layout */
+.skills__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+@media screen and (max-width: 767px) {
+    .skills__grid {
+        grid-template-columns: 1fr;
+    }
+}
+.skills__content {
+    background-color: var(--container-color);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--first-color-lighter);
+    box-shadow: 0 4px 18px hsla(var(--hue-color), 30%, 30%, 0.06);
+    transition: 0.25s;
+}
+.skills__content:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px hsla(var(--hue-color), 30%, 30%, 0.12);
+    border-color: var(--first-color-second);
+}
+.skills__header {
+    margin-bottom: 1rem;
+    cursor: default;
+}
+.skills__icon {
+    font-size: 1.4rem;
+    width: 44px;
+    height: 44px;
+    background: var(--input-color);
+    color: var(--first-color);
+    border-radius: 0.75rem;
+    display: grid;
+    place-items: center;
+    margin-right: var(--mb-0-75);
+    flex-shrink: 0;
+}
+.skills__title {
+    font-size: var(--h3-font-size);
+    font-weight: var(--font-semi-bold);
+    margin: 0;
+}
+.skills__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-left: 0;
+}
+.skills__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    background: var(--input-color);
+    color: var(--title-color);
+    font-size: var(--small-font-size);
+    font-weight: var(--font-medium);
+    border: 1px solid transparent;
+    transition: 0.2s;
+}
+.skills__tag:hover {
+    border-color: var(--first-color);
+    color: var(--first-color);
+    transform: translateY(-1px);
+}
+.skills__tag i {
+    color: var(--first-color);
+    font-size: 1rem;
+}
+
