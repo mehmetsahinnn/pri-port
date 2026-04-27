@@ -1,27 +1,22 @@
-// Vercel Serverless Function - Altın ve Döviz Fiyatları API (Web Scraping)
-// Endpoint: /api/gold
+// Vercel Serverless Function — Altın Fiyatları (Web Scraping)
+// Source : https://bigpara.hurriyet.com.tr/altin/
+// Endpoint: GET /api/gold
 
-// Cache storage (5 minutes)
 let cache = null;
 let cacheTimestamp = 0;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+const SOURCE_URL = 'https://bigpara.hurriyet.com.tr/altin/';
 
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
+  res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  // Check cache
   const now = Date.now();
   if (cache && (now - cacheTimestamp) < CACHE_DURATION) {
     return res.status(200).json({
@@ -32,107 +27,163 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Fetch HTML from haremaltin.com
-    const response = await fetch('https://www.haremaltin.com/', {
+    const response = await fetch(SOURCE_URL, {
       method: 'GET',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7'
+        'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Cache-Control': 'no-cache'
       }
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch data from haremaltin.com');
-    }
+    if (!response.ok) throw new Error(`Upstream returned ${response.status}`);
 
     const html = await response.text();
+    const parsed = parseBigpara(html);
 
-    // Parse HTML to extract gold prices
-    const scrapedData = parseGoldData(html);
-
-    if (!scrapedData || scrapedData.length === 0) {
-      throw new Error('Failed to parse gold data');
+    if (!parsed.gold || parsed.gold.length === 0) {
+      throw new Error('No rows parsed from upstream');
     }
 
     const responseData = {
       success: true,
-      source: 'haremaltin.com',
+      source: 'bigpara.hurriyet.com.tr',
+      sourceUrl: SOURCE_URL,
       timestamp: new Date().toISOString(),
-      data: scrapedData
+      data: parsed.gold,
+      silver: parsed.silver,
+      cached: false
     };
 
-    // Store in cache
     cache = responseData;
     cacheTimestamp = Date.now();
 
     return res.status(200).json(responseData);
-
   } catch (error) {
-    console.error('Scraping error:', error);
+    console.error('Scraping error:', error?.message || error);
+
+    // Serve last good cache if it exists, even if expired
+    if (cache) {
+      return res.status(200).json({
+        ...cache,
+        cached: true,
+        stale: true,
+        cacheAge: Math.floor((Date.now() - cacheTimestamp) / 1000),
+        note: 'Upstream unreachable, serving stale cache'
+      });
+    }
+
     return res.status(200).json({
       success: true,
       source: 'fallback',
       timestamp: new Date().toISOString(),
       data: getFallbackData(),
-      note: 'Scraping error, using fallback data'
+      silver: [],
+      note: 'Upstream unreachable, using fallback'
     });
   }
 }
 
-// Parse HTML to extract gold and currency prices
-function parseGoldData(html) {
-  const data = [];
+// ──────────────────────────────────────────────────────────────
+// Parser
+// ──────────────────────────────────────────────────────────────
+function parseBigpara(html) {
+  const result = { gold: [], silver: [] };
 
-  try {
-    // Extract GRAM ALTIN (Gram Gold)
-    const gramAltinMatch = html.match(/id="tr__KULCEALTIN"[\s\S]*?id="alis__KULCEALTIN">([0-9.,]+)<[\s\S]*?id="satis__KULCEALTIN">([0-9.,]+)<[\s\S]*?id="yuzde__KULCEALTIN">%([0-9.,]+)</);
-    if (gramAltinMatch) {
-      data.push({
-        name: 'Gram Altın',
-        buying: Number.parseFloat(gramAltinMatch[1].replace('.', '').replace(',', '.')),
-        selling: Number.parseFloat(gramAltinMatch[2].replace('.', '').replace(',', '.')),
-        rate: Number.parseFloat(gramAltinMatch[3].replace(',', '.')),
-        time: new Date().toLocaleString('tr-TR')
-      });
-    }
+  // Grab every <table class="tableBox"> ... </table>
+  const tableRe = /<table[^>]*class="[^"]*\btableBox\b[^"]*"[^>]*>([\s\S]*?)<\/table>/gi;
+  const tables = [];
+  let m;
+  while ((m = tableRe.exec(html)) !== null) tables.push(m[1]);
 
-    // Extract USD (Dolar)
-    const usdMatch = html.match(/id="tr__(USD|DOLAR)"[\s\S]*?id="alis__(USD|DOLAR)">([0-9.,]+)<[\s\S]*?id="satis__(USD|DOLAR)">([0-9.,]+)<[\s\S]*?id="yuzde__(USD|DOLAR)">%([0-9.,]+)/);
-    if (usdMatch) {
-      data.push({
-        name: 'Amerikan Doları',
-        buying: Number.parseFloat(usdMatch[3].replace('.', '').replace(',', '.')),
-        selling: Number.parseFloat(usdMatch[5].replace('.', '').replace(',', '.')),
-        rate: Number.parseFloat(usdMatch[7].replace(',', '.')),
-        time: new Date().toLocaleString('tr-TR')
-      });
-    }
+  if (tables.length === 0) return result;
 
-    // Extract EUR (Euro)
-    const eurMatch = html.match(/id="tr__EUR"[\s\S]*?id="alis__EUR">([0-9.,]+)<[\s\S]*?id="satis__EUR">([0-9.,]+)<[\s\S]*?id="yuzde__EUR">%([0-9.,]+)/);
-    if (eurMatch) {
-      data.push({
-        name: 'Euro',
-        buying: Number.parseFloat(eurMatch[1].replace('.', '').replace(',', '.')),
-        selling: Number.parseFloat(eurMatch[2].replace('.', '').replace(',', '.')),
-        rate: Number.parseFloat(eurMatch[3].replace(',', '.')),
-        time: new Date().toLocaleString('tr-TR')
-      });
-    }
+  // First tableBox = gold prices, second = silver (per current bigpara layout)
+  const goldRows = parseRows(tables[0]);
+  result.gold = goldRows;
 
-  } catch (error) {
-    console.error('Parse error:', error);
-    return null;
+  if (tables.length > 1) {
+    result.silver = parseRows(tables[1]);
   }
 
-  return data.length > 0 ? data : null;
+  return result;
+}
+
+function parseRows(tableHtml) {
+  const rows = [];
+  const trRe = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+  let tr;
+  while ((tr = trRe.exec(tableHtml)) !== null) {
+    const inner = tr[1];
+
+    // Skip the header row — it doesn't have <td> children
+    if (!/<td[\s>]/i.test(inner)) continue;
+
+    // Name cell — usually <td class="cell010 tal"> with an <a> inside
+    const nameCellMatch = inner.match(/<td[^>]*class="[^"]*\bcell010\b[^"]*"[^>]*>([\s\S]*?)<\/td>/i);
+    if (!nameCellMatch) continue;
+    const name = stripTags(nameCellMatch[1]).trim();
+    if (!name) continue;
+
+    // Value cells — every <td class="cell009 ..."> in document order
+    const valueCells = [...inner.matchAll(/<td[^>]*class="[^"]*\bcell009\b[^"]*"[^>]*>([\s\S]*?)<\/td>/gi)]
+      .map(c => stripTags(c[1]).trim());
+
+    if (valueCells.length < 2) continue;
+
+    const buying  = parseTRNumber(valueCells[0]);
+    const selling = parseTRNumber(valueCells[1]);
+    const rate    = parseTRPercent(valueCells[2] || '');
+    const time    = (valueCells[3] || '').replace(/\s+/g, ' ').trim();
+
+    rows.push({
+      name: cleanName(name),
+      buying,
+      selling,
+      rate,
+      time
+    });
+  }
+  return rows;
+}
+
+function stripTags(s) {
+  return s
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function cleanName(n) {
+  // Bigpara names sometimes look like "ALTIN (TL/GR) ALTIN_TL_GR" — keep just the human label
+  return n.replace(/\s{2,}.*$/, '').trim();
+}
+
+function parseTRNumber(s) {
+  if (!s) return null;
+  // Turkish format: "5.123,45" => 5123.45
+  const cleaned = s.replace(/[^\d,.\-]/g, '').replace(/\./g, '').replace(',', '.');
+  const n = Number.parseFloat(cleaned);
+  return Number.isFinite(n) ? n : null;
+}
+
+function parseTRPercent(s) {
+  if (!s) return 0;
+  const cleaned = s.replace(/[^\d,.\-+]/g, '').replace(/\./g, '').replace(',', '.');
+  const n = Number.parseFloat(cleaned);
+  return Number.isFinite(n) ? n : 0;
 }
 
 function getFallbackData() {
   return [
-    { name: 'Amerikan Doları', buying: 43.583, selling: 43.702, rate: 0.36, time: '2026-02-03 1:1:1' },
-    { name: 'Euro', buying: 51.287, selling: 51.539, rate: 0.54, time: '2026-02-03 1:1:1' },
-    { name: 'Gram Altın', buying: 6860.41, selling: 6861.27, rate: 0.01, time: '2026-02-03 1:1:1' }
+    { name: 'ALTIN (TL/GR)',    buying: 6860.41, selling: 6861.27, rate: 0.01, time: '--:--' },
+    { name: 'Çeyrek Altın',     buying: 11250.00, selling: 11380.00, rate: 0.05, time: '--:--' },
+    { name: 'Yarım Altın',      buying: 22500.00, selling: 22760.00, rate: 0.05, time: '--:--' },
+    { name: 'Tam Altın',        buying: 45000.00, selling: 45520.00, rate: 0.05, time: '--:--' },
+    { name: 'Cumhuriyet Altını',buying: 46500.00, selling: 47000.00, rate: 0.04, time: '--:--' },
+    { name: '22 Ayar Bilezik',  buying: 6450.00,  selling: 6520.00,  rate: 0.02, time: '--:--' }
   ];
 }

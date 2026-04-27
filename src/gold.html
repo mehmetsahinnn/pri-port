@@ -3,547 +3,808 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altın ve Döviz Fiyatları | Canlı Takip</title>
+    <title>Altın Fiyatları · Canlı Takip</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/src/favicon-32x32.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
     <style>
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #16161f;
-            --border-color: #2a2a3a;
-            --gold-primary: #d4af37;
-            --gold-secondary: #f4d03f;
-            --gold-dark: #b8860b;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0b0;
-            --text-muted: #606070;
-            --green: #00d26a;
-            --red: #ff4757;
-            --green-bg: rgba(0, 210, 106, 0.1);
-            --red-bg: rgba(255, 71, 87, 0.1);
+            /* Surfaces */
+            --bg:            #0b0b12;
+            --bg-grad-1:     #11121d;
+            --bg-grad-2:     #0a0a10;
+            --surface:       rgba(255, 255, 255, 0.04);
+            --surface-2:     rgba(255, 255, 255, 0.06);
+            --surface-hi:    rgba(255, 255, 255, 0.09);
+            --border:        rgba(255, 255, 255, 0.08);
+            --border-hi:     rgba(255, 255, 255, 0.16);
+
+            /* Text */
+            --text:          #f4f4f7;
+            --text-muted:    #9aa0b4;
+            --text-dim:      #6b7088;
+
+            /* Accents */
+            --gold:          #f5c451;
+            --gold-soft:     #d4a437;
+            --gold-glow:     rgba(245, 196, 81, 0.18);
+            --green:         #34d399;
+            --green-soft:    rgba(52, 211, 153, 0.12);
+            --red:           #f87171;
+            --red-soft:      rgba(248, 113, 113, 0.12);
+            --neutral:       #9aa0b4;
+            --neutral-soft:  rgba(154, 160, 180, 0.12);
+
+            /* Misc */
+            --radius-lg:     18px;
+            --radius-md:     12px;
+            --radius-sm:     8px;
+            --shadow-card:   0 1px 0 rgba(255,255,255,0.04) inset, 0 12px 32px -16px rgba(0,0,0,0.6);
+        }
+
+        html, body {
+            height: 100%;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: var(--bg-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            background-image:
+                radial-gradient(1200px 600px at 80% -10%, rgba(245, 196, 81, 0.10), transparent 60%),
+                radial-gradient(900px 500px at -10% 10%, rgba(99, 102, 241, 0.08), transparent 60%),
+                linear-gradient(180deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+            background-attachment: fixed;
+            color: var(--text);
             min-height: 100vh;
-            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1180px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 28px 22px 60px;
         }
 
+        /* ── Header ────────────────────────────────────────────────── */
         header {
-            text-align: center;
-            padding: 40px 0 30px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 30px;
-        }
-
-        .logo {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.5px;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: 4px;
-        }
-
-        .status-bar {
-            display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin-bottom: 24px;
-        }
-
-        .status-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--green);
-            box-shadow: 0 0 8px var(--green);
-        }
-
-        .status-dot.offline {
-            background: var(--red);
-            box-shadow: 0 0 8px var(--red);
-        }
-
-        .status-label {
-            color: var(--text-muted);
-        }
-
-        .status-value {
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .refresh-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: transparent;
-            border: 1px solid var(--gold-primary);
-            color: var(--gold-primary);
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .refresh-btn:hover {
-            background: var(--gold-primary);
-            color: var(--bg-primary);
-        }
-
-        .refresh-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .refresh-btn.loading .refresh-icon {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .category-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
+            gap: 16px;
+            padding: 8px 0 28px;
             flex-wrap: wrap;
         }
 
-        .tab-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .tab-btn:hover {
-            border-color: var(--gold-primary);
-            color: var(--gold-primary);
-        }
-
-        .tab-btn.active {
-            background: var(--gold-primary);
-            border-color: var(--gold-primary);
-            color: var(--bg-primary);
-        }
-
-        .table-container {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: var(--bg-card);
-        }
-
-        th {
-            padding: 16px 20px;
-            text-align: left;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th:last-child {
-            text-align: right;
-        }
-
-        td {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover {
-            background: rgba(212, 175, 55, 0.03);
-        }
-
-        .gold-name {
+        .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
-        .gold-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            flex-shrink: 0;
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+            display: grid;
+            place-items: center;
+            box-shadow: 0 8px 24px -10px var(--gold-glow), 0 0 0 1px rgba(255,255,255,0.06) inset;
+            color: #1a1306;
         }
 
-        .gold-info {
-            display: flex;
-            flex-direction: column;
+        .brand-mark svg { width: 22px; height: 22px; }
+
+        .brand-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
         }
 
-        .gold-title {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .gold-time {
-            font-size: 0.75rem;
+        .brand-text p {
+            font-size: 0.78rem;
             color: var(--text-muted);
             margin-top: 2px;
         }
 
-        .price {
-            font-family: 'SF Mono', 'Fira Code', monospace;
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color .15s, border-color .15s, background .15s;
+        }
+        .home-link:hover { color: var(--text); border-color: var(--border-hi); background: var(--surface-2); }
+
+        /* ── Status / Refresh bar ──────────────────────────────────── */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
+
+        .status-left { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+
+        .status-item {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.82rem;
+        }
+
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 0 3px var(--green-soft);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .status-dot.offline { background: var(--red); box-shadow: 0 0 0 3px var(--red-soft); animation: none; }
+        @keyframes pulse {
+            0%,100% { box-shadow: 0 0 0 3px var(--green-soft); }
+            50%     { box-shadow: 0 0 0 6px rgba(52,211,153,0.05); }
+        }
+
+        .status-label { color: var(--text-dim); }
+        .status-value { color: var(--text); font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+
+        .refresh-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+            border: none;
+            color: #1a1306;
+            padding: 9px 18px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.82rem;
             font-weight: 600;
-            font-size: 0.95rem;
+            cursor: pointer;
+            transition: transform .12s, box-shadow .15s, opacity .15s;
+            box-shadow: 0 6px 18px -8px var(--gold-glow);
+        }
+        .refresh-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -10px var(--gold-glow); }
+        .refresh-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .refresh-btn .ico { width: 14px; height: 14px; }
+        .refresh-btn.loading .ico { animation: spin 0.9s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Featured cards ────────────────────────────────────────── */
+        .featured {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-bottom: 22px;
         }
 
-        .price-buy {
-            color: #AF9E9EFF;
+        .feature-card {
+            position: relative;
+            padding: 18px 18px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            transition: border-color .15s, transform .15s;
+        }
+        .feature-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(245,196,81,0.45), transparent);
+            opacity: 0.6;
         }
 
-        .price-sell {
-            color: #AF9E9EFF;
+        .feature-head {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 14px;
         }
 
-        .change {
+        .feature-name {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+        }
+
+        .feature-icon {
+            width: 30px; height: 30px;
+            border-radius: 8px;
+            background: rgba(245,196,81,0.12);
+            color: var(--gold);
+            display: grid; place-items: center;
+        }
+        .feature-icon svg { width: 16px; height: 16px; }
+
+        .feature-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.55rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+        }
+
+        .feature-meta {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+        }
+
+        /* ── Tabs ──────────────────────────────────────────────────── */
+        .tabs {
+            display: flex; gap: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 5px;
+            margin-bottom: 16px;
+            width: max-content;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background .15s, color .15s;
+            white-space: nowrap;
+        }
+        .tab:hover { color: var(--text); }
+        .tab.active {
+            background: var(--surface-hi);
+            color: var(--gold);
+        }
+
+        /* ── Search ────────────────────────────────────────────────── */
+        .toolbar {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 14px; flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .search {
+            position: relative;
+            flex: 1;
+            min-width: 220px;
+        }
+        .search input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 12px 10px 38px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: border-color .15s, background .15s;
+        }
+        .search input:focus { outline: none; border-color: var(--gold-soft); background: var(--surface-2); }
+        .search input::placeholder { color: var(--text-dim); }
+        .search svg {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            width: 16px; height: 16px; color: var(--text-dim);
+        }
+
+        .row-count { font-size: 0.78rem; color: var(--text-dim); }
+
+        /* ── Table ─────────────────────────────────────────────────── */
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .table-scroll { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 14px 18px;
+            background: rgba(255,255,255,0.025);
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(6px);
+        }
+        thead th.right { text-align: right; }
+        thead th.center { text-align: center; }
+
+        tbody td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr { transition: background .12s; }
+        tbody tr:hover { background: rgba(245,196,81,0.035); }
+
+        .name-cell { display: flex; align-items: center; gap: 12px; min-width: 200px; }
+
+        .row-icon {
+            width: 34px; height: 34px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, rgba(245,196,81,0.18), rgba(245,196,81,0.06));
+            display: grid; place-items: center;
+            color: var(--gold);
+            flex-shrink: 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(245,196,81,0.18);
+        }
+        .row-icon.silver {
+            background: linear-gradient(135deg, rgba(180,200,220,0.18), rgba(180,200,220,0.06));
+            color: #c8d4e3;
+            border-color: rgba(180,200,220,0.18);
+        }
+
+        .name-text { display: flex; flex-direction: column; gap: 2px; }
+        .name-title { font-weight: 600; color: var(--text); font-size: 0.9rem; }
+        .name-sub { font-size: 0.72rem; color: var(--text-dim); }
+
+        .price {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: right;
+            color: var(--text);
+            white-space: nowrap;
+        }
+        .price.muted { color: var(--text-muted); font-weight: 500; }
+
+        .change-cell { text-align: right; white-space: nowrap; }
+
+        .pill {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
             font-weight: 600;
-            font-family: 'SF Mono', 'Fira Code', monospace;
+            line-height: 1;
         }
+        .pill.up   { background: var(--green-soft); color: var(--green); }
+        .pill.down { background: var(--red-soft);   color: var(--red); }
+        .pill.flat { background: var(--neutral-soft); color: var(--neutral); }
+        .pill svg { width: 10px; height: 10px; }
 
-        .change.positive {
-            background: var(--green-bg);
-            color: var(--green);
-        }
-
-        .change.negative {
-            background: var(--red-bg);
-            color: var(--red);
-        }
-
-        .change.neutral {
-            background: rgba(160, 160, 176, 0.1);
-            color: var(--text-muted);
-        }
-
-        .change-cell {
+        .time-cell {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-dim);
             text-align: right;
+            white-space: nowrap;
         }
 
-        .loading-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        /* ── Loading / Error ───────────────────────────────────────── */
+        .state {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 80px 20px;
             color: var(--text-muted);
+            gap: 14px;
         }
-
         .loader {
-            width: 48px;
-            height: 48px;
-            border: 3px solid var(--border-color);
-            border-top-color: var(--gold-primary);
+            width: 38px; height: 38px;
+            border: 3px solid var(--border);
+            border-top-color: var(--gold);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 16px;
+            animation: spin 0.9s linear infinite;
         }
+        .state.error { color: var(--red); }
+        .state .hint { font-size: 0.82rem; color: var(--text-dim); }
 
-        .error-container {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--red);
-        }
-
+        /* ── Footer ────────────────────────────────────────────────── */
         footer {
             text-align: center;
-            padding: 30px 20px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--border-color);
-            margin-top: 40px;
+            padding: 30px 12px 0;
+            color: var(--text-dim);
+            font-size: 0.78rem;
+            line-height: 1.7;
         }
+        footer a { color: var(--gold); text-decoration: none; font-weight: 500; }
+        footer a:hover { text-decoration: underline; }
 
-        footer a {
-            color: var(--gold-primary);
-            text-decoration: none;
-            font-weight: 500;
+        /* ── Mobile ────────────────────────────────────────────────── */
+        @media (max-width: 720px) {
+            .container { padding: 18px 14px 40px; }
+            .brand-text h1 { font-size: 1.1rem; }
+            .feature-price { font-size: 1.3rem; }
+            thead th, tbody td { padding: 12px 12px; }
+            .name-cell { min-width: 160px; }
+            .row-icon { width: 30px; height: 30px; font-size: 0.75rem; }
+            .name-title { font-size: 0.85rem; }
+            .hide-sm { display: none; }
         }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .container { padding: 12px; }
-            header { padding: 24px 0 20px; }
-            h1 { font-size: 1.5rem; }
-            .status-bar { flex-direction: column; gap: 16px; }
-            .status-left { flex-direction: column; gap: 8px; }
-            th, td { padding: 12px 10px; font-size: 0.8rem; }
-            .gold-icon { width: 28px; height: 28px; font-size: 12px; }
-            .gold-title { font-size: 0.85rem; }
-            .price { font-size: 0.85rem; }
-            .change { padding: 4px 8px; font-size: 0.75rem; }
-            .category-tabs { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 8px; }
-            .tab-btn { white-space: nowrap; padding: 8px 16px; }
-        }
-
-        @media (max-width: 600px) {
-            .hide-mobile { display: none; }
+        @media (max-width: 480px) {
+            .hide-xs { display: none; }
+            .feature-price { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- HEADER -->
         <header>
-            <div class="logo">
-                <div class="logo-icon">💰</div>
-                <h1>Altın ve Döviz Fiyatları</h1>
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7l3-4h12l3 4-9 14-9-14z"/>
+                        <path d="M3 7h18"/>
+                        <path d="M9 7l3-4 3 4"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>Altın Fiyatları</h1>
+                    <p>Canlı piyasa verisi · 5 dk önbellek</p>
+                </div>
             </div>
-            <p class="subtitle">Canlı piyasa verileri - 5 dakikalık önbellek</p>
+            <div class="header-actions">
+                <a href="/" class="home-link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                    Ana Sayfa
+                </a>
+            </div>
         </header>
 
+        <!-- STATUS BAR -->
         <div class="status-bar">
             <div class="status-left">
                 <div class="status-item">
                     <span class="status-dot" id="statusDot"></span>
                     <span class="status-label">Durum:</span>
-                    <span class="status-value" id="statusText">Bağlanıyor...</span>
+                    <span class="status-value" id="statusText">Bağlanıyor…</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Kaynak:</span>
+                    <span class="status-value" id="sourceText">bigpara.hurriyet.com.tr</span>
                 </div>
                 <div class="status-item">
                     <span class="status-label">Güncelleme:</span>
                     <span class="status-value" id="lastUpdate">--:--:--</span>
                 </div>
             </div>
-            <button class="refresh-btn" id="refreshBtn" onclick="fetchGoldPrices()">
-                <span class="refresh-icon">↻</span>
+            <button class="refresh-btn" id="refreshBtn" type="button" onclick="fetchGoldPrices()">
+                <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/>
+                </svg>
                 Yenile
             </button>
         </div>
 
+        <!-- FEATURED CARDS -->
+        <div class="featured" id="featuredCards"></div>
 
-        <div class="table-container">
-            <div id="tableContent">
-                <div class="loading-container">
+        <!-- TABS -->
+        <div class="tabs" id="tabs">
+            <button type="button" class="tab active" data-tab="all">Tümü</button>
+            <button type="button" class="tab" data-tab="popular">Popüler</button>
+            <button type="button" class="tab" data-tab="silver">Gümüş</button>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+            <label class="search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                <input id="searchInput" type="search" placeholder="Altın türü ara… (örn. Çeyrek, 22 Ayar)" autocomplete="off" />
+            </label>
+            <span class="row-count" id="rowCount">—</span>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-wrap">
+            <div class="table-scroll" id="tableContent">
+                <div class="state">
                     <div class="loader"></div>
-                    <p>Fiyatlar yükleniyor...</p>
+                    <p>Fiyatlar yükleniyor…</p>
                 </div>
             </div>
         </div>
 
+        <!-- FOOTER -->
         <footer>
             <p>Veriler bilgi amaçlıdır, yatırım tavsiyesi değildir.</p>
-            <p style="margin-top: 8px;">
-                <a href="/">← Ana Sayfa</a>
-            </p>
+            <p>Kaynak: <a href="https://bigpara.hurriyet.com.tr/altin/" target="_blank" rel="noopener noreferrer">bigpara.hurriyet.com.tr</a></p>
         </footer>
     </div>
 
     <script>
-        const goldIcons = {
-            'Gram Altın': '🥇',
-            'Amerikan Doları': '💵',
-            'Euro': '💶',
-            'default': '💰'
+        // Curated list of "popular" gold types and the featured cards to highlight up top
+        const POPULAR_KEYS  = ['altin (tl/gr)', 'altin tl/gr', 'gram altın', 'çeyrek', 'yarım', 'tam altın', 'cumhuriyet', '22 ayar bilezik', '22 ayar', 'ata altın'];
+        const FEATURED_KEYS = ['altin (tl/gr)', 'gram altın', 'çeyrek', 'cumhuriyet'];
+
+        const ICONS = {
+            'altin (tl/gr)':       'GR',
+            'altin tl/gr':         'GR',
+            'gram altın':          'GR',
+            'altın (ons)':         'OZ',
+            '22 ayar bilezik':     '22',
+            '22 ayar':             '22',
+            '18 ayar':             '18',
+            '14 ayar':             '14',
+            'cumhuriyet':          'CM',
+            'cumhuriyet altını':   'CM',
+            'yarım':               '½',
+            'yarım altın':         '½',
+            'çeyrek':              '¼',
+            'çeyrek altın':        '¼',
+            'tam':                 'T',
+            'tam altın':           'T',
+            'reşat':               'R',
+            'reşat altın':         'R',
+            'kulplu reşat':        'KR',
+            'ata':                 'A',
+            'ata altın':           'A',
+            'hamit':               'H',
+            'hamit altın':         'H',
+            'gremse':              'G',
+            'has altın':           'HS',
+            'külçe altın ($)':     'K$',
+            'ziynet 2.5':          'Z2',
+            'ziynet 5':            'Z5'
         };
 
-        let allData = [];
+        let allGold   = [];
+        let allSilver = [];
+        let activeTab = 'all';
+        let searchQuery = '';
 
         async function fetchGoldPrices() {
-            const refreshBtn = document.getElementById('refreshBtn');
-            const statusDot = document.getElementById('statusDot');
-            const statusText = document.getElementById('statusText');
-            const lastUpdate = document.getElementById('lastUpdate');
+            const refreshBtn  = document.getElementById('refreshBtn');
+            const statusDot   = document.getElementById('statusDot');
+            const statusText  = document.getElementById('statusText');
+            const sourceText  = document.getElementById('sourceText');
+            const lastUpdate  = document.getElementById('lastUpdate');
 
             refreshBtn.disabled = true;
             refreshBtn.classList.add('loading');
 
             try {
-                const response = await fetch('/api/gold');
-                const result = await response.json();
+                const response = await fetch('/api/gold', { cache: 'no-store' });
+                const result   = await response.json();
 
-                if (result.success && result.data) {
-                    allData = result.data;
-                    renderTable(allData);
+                if (result.success && Array.isArray(result.data)) {
+                    allGold   = result.data;
+                    allSilver = Array.isArray(result.silver) ? result.silver : [];
                     statusDot.classList.remove('offline');
 
-                    if (result.cached) {
+                    if (result.cached && result.stale) {
+                        statusText.textContent = `Önbellek (eski · ${result.cacheAge}s)`;
+                    } else if (result.cached) {
                         statusText.textContent = `Önbellek (${result.cacheAge}s)`;
+                    } else if (result.source === 'fallback') {
+                        statusText.textContent = 'Yedek veri';
                     } else {
-                        statusText.textContent = result.source === 'live' ? 'Canlı' : 'Yedek Veri';
+                        statusText.textContent = 'Canlı';
                     }
-
+                    sourceText.textContent = result.source || 'bigpara.hurriyet.com.tr';
                     lastUpdate.textContent = new Date().toLocaleTimeString('tr-TR');
+
+                    renderFeatured(allGold);
+                    renderTable();
                 } else {
                     throw new Error('Veri alınamadı');
                 }
             } catch (error) {
+                console.error(error);
                 statusDot.classList.add('offline');
                 statusText.textContent = 'Hata';
                 document.getElementById('tableContent').innerHTML = `
-                    <div class="error-container">
-                        <p>⚠️ Fiyatlar yüklenemedi</p>
-                        <p style="font-size: 0.85rem; margin-top: 10px; color: var(--text-muted);">
-                            Lütfen daha sonra tekrar deneyin
-                        </p>
-                    </div>
-                `;
+                    <div class="state error">
+                        <p>⚠ Fiyatlar yüklenemedi</p>
+                        <p class="hint">Lütfen biraz sonra tekrar deneyin.</p>
+                    </div>`;
             } finally {
                 refreshBtn.disabled = false;
                 refreshBtn.classList.remove('loading');
             }
         }
 
-        function renderTable(data) {
-            const tableContent = document.getElementById('tableContent');
+        function key(name) { return (name || '').toLocaleLowerCase('tr-TR').trim(); }
 
-            if (!data || data.length === 0) {
-                tableContent.innerHTML = `<div class="loading-container"><p>Veri bulunamadı</p></div>`;
+        function pickFeatured(data) {
+            const out = [];
+            const seen = new Set();
+            for (const fk of FEATURED_KEYS) {
+                const item = data.find(d => {
+                    const k = key(d.name);
+                    return !seen.has(k) && (k === fk || k.includes(fk));
+                });
+                if (item) { out.push(item); seen.add(key(item.name)); }
+                if (out.length >= 4) break;
+            }
+            // Pad with first items if we didn't find enough
+            for (const item of data) {
+                if (out.length >= 4) break;
+                if (!seen.has(key(item.name))) { out.push(item); seen.add(key(item.name)); }
+            }
+            return out.slice(0, 4);
+        }
+
+        function renderFeatured(data) {
+            const wrap = document.getElementById('featuredCards');
+            const featured = pickFeatured(data);
+            wrap.innerHTML = featured.map(it => {
+                const cls = changeClass(it.rate);
+                const rate = formatRate(it.rate);
+                return `
+                <div class="feature-card">
+                    <div class="feature-head">
+                        <span class="feature-name">${escapeHtml(it.name)}</span>
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </div>
+                    </div>
+                    <div class="feature-price">${formatMoney(it.selling ?? it.buying)}</div>
+                    <div class="feature-meta">
+                        <span>Alış: <strong style="color:var(--text);">${formatMoney(it.buying)}</strong></span>
+                        <span class="pill ${cls.cls}">${cls.arrow}${rate}%</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function visibleRows() {
+            let rows = activeTab === 'silver' ? allSilver : allGold.slice();
+            if (activeTab === 'popular') {
+                rows = rows.filter(r => POPULAR_KEYS.some(p => key(r.name).includes(p)));
+            }
+            if (searchQuery) {
+                const q = key(searchQuery);
+                rows = rows.filter(r => key(r.name).includes(q));
+            }
+            return rows;
+        }
+
+        function renderTable() {
+            const tableContent = document.getElementById('tableContent');
+            const rows = visibleRows();
+            document.getElementById('rowCount').textContent = `${rows.length} kayıt`;
+
+            if (rows.length === 0) {
+                tableContent.innerHTML = `<div class="state"><p>Sonuç bulunamadı</p><p class="hint">Filtrelerinizi değiştirmeyi deneyin.</p></div>`;
                 return;
             }
 
+            const isSilver = activeTab === 'silver';
             let html = `
                 <table>
                     <thead>
                         <tr>
-                            <th>Kur/Emtia</th>
-                            <th>Alış (₺)</th>
-                            <th>Satış (₺)</th>
-                            <th class="change-cell">Değişim</th>
+                            <th>Tür</th>
+                            <th class="right">Alış</th>
+                            <th class="right">Satış</th>
+                            <th class="right">Değişim</th>
+                            <th class="right hide-xs">Saat</th>
                         </tr>
                     </thead>
-                    <tbody>
-            `;
+                    <tbody>`;
 
-            data.forEach(item => {
-                const name = item.name || 'Bilinmiyor';
-                const buying = item.buying;
-                const selling = item.selling;
-                const rate = item.rate || 0;
-                const time = item.time || '';
-                const isPositive = rate > 0;
-                const isNegative = rate < 0;
-                const changeClass = isPositive ? 'positive' : (isNegative ? 'negative' : 'neutral');
-                const changePrefix = isPositive ? '+' : '';
-                const icon = goldIcons[name] || goldIcons['default'];
+            for (const item of rows) {
+                const cls   = changeClass(item.rate);
+                const rate  = formatRate(item.rate);
+                const k     = key(item.name);
+                const badge = ICONS[k] || (isSilver ? 'AG' : 'AU');
 
                 html += `
                     <tr>
                         <td>
-                            <div class="gold-name">
-                                <div class="gold-icon">${icon}</div>
-                                <div class="gold-info">
-                                    <span class="gold-title">${name}</span>
-                                    <span class="gold-time">${time}</span>
+                            <div class="name-cell">
+                                <div class="row-icon ${isSilver ? 'silver' : ''}">${badge}</div>
+                                <div class="name-text">
+                                    <span class="name-title">${escapeHtml(item.name)}</span>
+                                    <span class="name-sub">${isSilver ? 'Gümüş' : 'Altın'}</span>
                                 </div>
                             </div>
                         </td>
-                        <td class="price price-buy">${formatPrice(buying)}</td>
-                        <td class="price price-sell">${formatPrice(selling)}</td>
+                        <td class="price muted">${formatMoney(item.buying)}</td>
+                        <td class="price">${formatMoney(item.selling)}</td>
                         <td class="change-cell">
-                            <span class="change ${changeClass}">${changePrefix}${rate.toFixed(2)}%</span>
+                            <span class="pill ${cls.cls}">${cls.arrow}${rate}%</span>
                         </td>
-                    </tr>
-                `;
-            });
-
+                        <td class="time-cell hide-xs">${escapeHtml(item.time || '—')}</td>
+                    </tr>`;
+            }
             html += '</tbody></table>';
             tableContent.innerHTML = html;
         }
 
-        function formatPrice(price) {
-            if (!price || price === '-') return '-';
-            const num = typeof price === 'string' ? parseFloat(price.replace(',', '.')) : price;
-            if (isNaN(num)) return price;
-            return num.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+        function changeClass(rate) {
+            const r = Number(rate) || 0;
+            if (r > 0)  return { cls: 'up',   arrow: '▲ ' };
+            if (r < 0)  return { cls: 'down', arrow: '▼ ' };
+            return { cls: 'flat', arrow: '· ' };
         }
 
+        function formatRate(r) {
+            const n = Number(r) || 0;
+            const sign = n > 0 ? '+' : '';
+            return sign + n.toFixed(2);
+        }
+
+        function formatMoney(v) {
+            if (v == null || v === '' || v === '-') return '—';
+            const n = typeof v === 'string' ? parseFloat(v.replace(',', '.')) : v;
+            if (!Number.isFinite(n)) return '—';
+            return n.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function escapeHtml(s) {
+            return String(s ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // Tab handling
+        document.getElementById('tabs').addEventListener('click', (e) => {
+            const btn = e.target.closest('.tab');
+            if (!btn) return;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            activeTab = btn.dataset.tab;
+            renderTable();
+        });
+
+        // Search
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderTable();
+        });
+
         document.addEventListener('DOMContentLoaded', fetchGoldPrices);
-        setInterval(fetchGoldPrices, 30000); // Refresh every 30 seconds
+        // Auto-refresh every 60s (server cache is 5 min — this just re-checks)
+        setInterval(fetchGoldPrices, 60_000);
     </script>
 </body>
 </html>
