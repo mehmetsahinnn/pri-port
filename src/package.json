@@ -4,5 +4,8 @@
   "description": "Vercel root directory is src/, so this is the package.json Vercel reads for the Node version.",
   "engines": {
     "node": "24.x"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.39.0"
   }
 }

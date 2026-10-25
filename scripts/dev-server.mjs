@@ -71,6 +71,11 @@ http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   if (url.pathname.startsWith('/api/')) return runApi(req, res, url);
 
+  // Mirror production: dependencies and manifests are not served.
+  if (/^\/(node_modules\/|package(-lock)?\.json$)/.test(url.pathname)) {
+    res.statusCode = 404;
+    return res.end('Not found');
+  }
   const requested = url.pathname === '/' ? '/index.html' : url.pathname;
   const rel = normalize(decodeURIComponent(requested)).replace(/^(\.\.[/\\])+/, '');
   try {

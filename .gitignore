@@ -22,3 +22,6 @@ npm-debug.log*
 .env.local
 .env.*.local
 .env*.local
+
+# Local dev data store (scripts/dev-server.mjs)
+.data/

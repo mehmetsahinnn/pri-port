@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Qualifications - Yönetim</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="assets/css/fonts.css">
+    <link rel="stylesheet" href="assets/css/unicons.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        .panel { min-height: 100vh; max-width: 900px; margin: 0 auto; padding: 6rem 1rem 3rem; }
+        .panel__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .panel__head h1 { font-size: var(--h1-font-size); color: var(--title-color); }
+        .panel__meta { color: var(--text-color); font-size: var(--small-font-size); margin-top: .25rem; }
+        .card { background: var(--container-color); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem;
+                box-shadow: 0 2px 16px hsla(var(--hue-color), 66%, 45%, .15); }
+        .card h2 { color: var(--title-color); font-size: var(--h3-font-size); margin-bottom: 1rem; }
+        .notice { padding: .75rem 1rem; border-radius: .5rem; margin-bottom: 1rem; font-size: var(--small-font-size);
+                  background: var(--first-color-lighter); color: var(--title-color); }
+        .notice--error { background: #fde2e2; color: #8a1c1c; }
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+        .field { display: flex; flex-direction: column; gap: .25rem; margin-bottom: .75rem; }
+        .field label { font-size: var(--small-font-size); color: var(--text-color); }
+        .field input, .field select { padding: .6rem .75rem; border-radius: .5rem; border: 1px solid var(--first-color-lighter);
+                background: var(--body-color); color: var(--title-color); font-family: var(--body-font); font-size: var(--normal-font-size); }
+        .row { display: flex; align-items: center; gap: .75rem; padding: .85rem 0; border-top: 1px solid var(--first-color-lighter); }
+        .row:first-of-type { border-top: 0; }
+        .row__main { flex: 1; min-width: 0; }
+        .row__title { color: var(--title-color); font-weight: var(--font-medium); }
+        .row__sub { color: var(--text-color); font-size: var(--small-font-size); }
+        .row__order { color: var(--text-color-light); font-size: var(--small-font-size); }
+        .btn { cursor: pointer; border: 0; border-radius: .5rem; padding: .5rem .85rem; font-family: var(--body-font);
+               font-size: var(--small-font-size); background: var(--first-color-lighter); color: var(--first-color); }
+        .btn--primary { background: var(--first-color); color: #fff; }
+        .btn--danger { background: #fde2e2; color: #b42318; }
+        .btn:disabled { opacity: .6; cursor: default; }
+        .actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .5rem; }
+        .empty { color: var(--text-color); font-size: var(--small-font-size); padding: .5rem 0; }
+        body.dark-theme .notice--error { background: #4a1d1d; color: #ffb4b4; }
+        body.dark-theme .btn--danger { background: #4a1d1d; color: #ffb4b4; }
+        @media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } .row { flex-wrap: wrap; } }
+    </style>
+</head>
+<body>
+<header class="header" id="header">
+    <nav class="nav container">
+        <a href="/" class="nav__logo">Mehmet Şahin</a>
+        <div class="nav__btns">
+            <button class="change-theme" id="theme-button" title="Tema" aria-label="Temayı değiştir">
+                <i class="uil uil-moon"></i>
+            </button>
+        </div>
+    </nav>
+</header>
+
+<main class="panel">
+    <div class="panel__head">
+        <div>
+            <h1>Qualifications</h1>
+            <p class="panel__meta">Değişiklikler ana sayfaya en geç 1 dakika içinde yansır. Küçük "sıra" sayısı listede daha üstte görünür.</p>
+        </div>
+        <a href="/admin.html" class="btn"><i class="uil uil-arrow-left"></i> Panele dön</a>
+    </div>
+
+    <div id="notice" class="notice" hidden></div>
+
+    <section class="card">
+        <h2 id="form-title">Yeni kayıt ekle</h2>
+        <form id="form" autocomplete="off">
+            <div class="grid2">
+                <div class="field">
+                    <label for="f-type">Tür</label>
+                    <select id="f-type" required>
+                        <option value="education">Eğitim (Education)</option>
+                        <option value="work">İş (Work)</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="f-order">Sıra (boşsa en üste eklenir)</label>
+                    <input id="f-order" type="number" step="1" placeholder="örn. 10">
+                </div>
+            </div>
+            <div class="grid2">
+                <div class="field"><label for="f-title-en">Başlık (EN)</label><input id="f-title-en" maxlength="200" required></div>
+                <div class="field"><label for="f-title-tr">Başlık (TR)</label><input id="f-title-tr" maxlength="200"></div>
+                <div class="field"><label for="f-org-en">Kurum (EN)</label><input id="f-org-en" maxlength="200" required></div>
+                <div class="field"><label for="f-org-tr">Kurum (TR)</label><input id="f-org-tr" maxlength="200"></div>
+                <div class="field"><label for="f-date-en">Tarih (EN)</label><input id="f-date-en" maxlength="200" placeholder="July, 2025 - Present" required></div>
+                <div class="field"><label for="f-date-tr">Tarih (TR)</label><input id="f-date-tr" maxlength="200" placeholder="Temmuz 2025 - Devam ediyor"></div>
+            </div>
+            <p class="row__sub">TR alanları boş bırakılırsa İngilizce metin kullanılır.</p>
+            <div class="actions">
+                <button type="submit" class="btn btn--primary" id="save-btn">Kaydet</button>
+                <button type="button" class="btn" id="cancel-btn" hidden>Vazgeç</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card"><h2>Eğitim</h2><div id="list-education"></div></section>
+    <section class="card"><h2>İş</h2><div id="list-work"></div></section>
+</main>
+
+<script type="module">
+    import { initTheme } from './assets/js/modules/theme.js';
+    initTheme();
+
+    const API = '/api/admin-qualifications';
+    const $ = (id) => document.getElementById(id);
+    const form = $('form');
+    const noticeEl = $('notice');
+    let items = [];
+    let editingId = null;
+
+    function notify(message, isError = false) {
+        noticeEl.textContent = message;
+        noticeEl.className = isError ? 'notice notice--error' : 'notice';
+        noticeEl.hidden = !message;
+    }
+
+    async function call(method, { query = '', body } = {}) {
+        const res = await fetch(API + query, {
+            method,
+            credentials: 'same-origin',
+            headers: body ? { 'Content-Type': 'application/json' } : undefined,
+            body: body ? JSON.stringify(body) : undefined,
+        });
+        if (res.status === 401) { window.location.replace('/'); throw new Error('unauthorized'); }
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        return data;
+    }
+
+    function readForm() {
+        const v = (id) => $(id).value.trim();
+        const order = v('f-order');
+        return {
+            type: $('f-type').value,
+            order: order === '' ? undefined : Number(order),
+            title: { en: v('f-title-en'), tr: v('f-title-tr') },
+            org: { en: v('f-org-en'), tr: v('f-org-tr') },
+            date: { en: v('f-date-en'), tr: v('f-date-tr') },
+        };
+    }
+
+    function resetForm() {
+        editingId = null;
+        form.reset();
+        $('form-title').textContent = 'Yeni kayıt ekle';
+        $('cancel-btn').hidden = true;
+    }
+
+    function startEdit(item) {
+        editingId = item.id;
+        $('f-type').value = item.type;
+        $('f-order').value = item.order;
+        $('f-title-en').value = item.title.en; $('f-title-tr').value = item.title.tr;
+        $('f-org-en').value = item.org.en;     $('f-org-tr').value = item.org.tr;
+        $('f-date-en').value = item.date.en;   $('f-date-tr').value = item.date.tr;
+        $('form-title').textContent = 'Kaydı düzenle';
+        $('cancel-btn').hidden = false;
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderList(type) {
+        const box = $(`list-${type}`);
+        const rows = items.filter((i) => i.type === type);
+        if (!rows.length) {
+            const p = document.createElement('p');
+            p.className = 'empty';
+            p.textContent = 'Kayıt yok.';
+            box.replaceChildren(p);
+            return;
+        }
+        box.replaceChildren(...rows.map((item) => {
+            const row = document.createElement('div');
+            row.className = 'row';
+
+            const main = document.createElement('div');
+            main.className = 'row__main';
+            const title = document.createElement('div');
+            title.className = 'row__title';
+            title.textContent = item.title.en;
+            const sub = document.createElement('div');
+            sub.className = 'row__sub';
+            sub.textContent = `${item.org.en} · ${item.date.en}`;
+            main.append(title, sub);
+
+            const order = document.createElement('span');
+            order.className = 'row__order';
+            order.textContent = `sıra ${item.order}`;
+
+            const edit = document.createElement('button');
+            edit.type = 'button'; edit.className = 'btn'; edit.textContent = 'Düzenle';
+            edit.addEventListener('click', () => startEdit(item));
+
+            const del = document.createElement('button');
+            del.type = 'button'; del.className = 'btn btn--danger'; del.textContent = 'Sil';
+            del.addEventListener('click', async () => {
+                if (!confirm(`"${item.title.en}" silinsin mi?`)) return;
+                del.disabled = true;
+                try {
+                    await call('DELETE', { query: `?id=${encodeURIComponent(item.id)}` });
+                    if (editingId === item.id) resetForm();
+                    notify('Silindi.');
+                    await load();
+                } catch (err) { notify(err.message, true); del.disabled = false; }
+            });
+
+            row.append(main, order, edit, del);
+            return row;
+        }));
+    }
+
+    async function load() {
+        const data = await call('GET');
+        items = data.items;
+        renderList('education');
+        renderList('work');
+        if (!data.writable) {
+            notify('Depolama (Upstash Redis) bağlı değil: kayıtlar listelenir ama kaydedilemez.', true);
+        }
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const save = $('save-btn');
+        save.disabled = true;
+        try {
+            const payload = readForm();
+            if (editingId) {
+                await call('PUT', { body: { ...payload, id: editingId } });
+                notify('Güncellendi.');
+            } else {
+                await call('POST', { body: payload });
+                notify('Eklendi.');
+            }
+            resetForm();
+            await load();
+        } catch (err) {
+            notify(err.message, true);
+        } finally {
+            save.disabled = false;
+        }
+    });
+    $('cancel-btn').addEventListener('click', resetForm);
+
+    load().catch((err) => { if (err.message !== 'unauthorized') notify(`Yüklenemedi: ${err.message}`, true); });
+</script>
+</body>
+</html>

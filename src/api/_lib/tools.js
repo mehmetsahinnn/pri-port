@@ -4,6 +4,14 @@
 
 export const TOOLS = [
   {
+    id: 'qualifications',
+    type: 'manage',
+    title: 'Qualifications',
+    description: 'Eğitim ve iş deneyimi kayıtlarını ekle, düzenle, sil. Ana sayfa buna göre güncellenir.',
+    icon: 'uil-graduation-cap',
+    href: '/admin-qualifications.html',
+  },
+  {
     id: 'gold',
     type: 'page',
     title: 'Gold Tracker',

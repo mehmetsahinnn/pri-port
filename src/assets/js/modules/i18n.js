@@ -7,6 +7,10 @@ const OG_LOCALE = { en: 'en_US', tr: 'tr_TR' };
 
 let currentLang = translations[getItem(LANG_KEY)] ? getItem(LANG_KEY) : DEFAULT_LANG;
 
+export function getLang() {
+    return currentLang;
+}
+
 export function t(key) {
     return translations[currentLang]?.[key] ?? translations[DEFAULT_LANG][key] ?? key;
 }
@@ -43,6 +47,9 @@ export function applyLang() {
 
     const button = document.getElementById('lang-button');
     if (button) button.textContent = currentLang.toUpperCase();
+
+    // Lets modules that render their own (data-driven) content re-render.
+    document.dispatchEvent(new CustomEvent('langchange', { detail: currentLang }));
 }
 
 export function initI18n() {
