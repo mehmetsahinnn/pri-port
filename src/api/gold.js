@@ -2,6 +2,11 @@
 // Source : https://bigpara.hurriyet.com.tr/altin/
 // Endpoint: GET /api/gold
 
+// Admin only (HttpOnly session cookie). Cache-Control is `private` so a shared
+// CDN cache can never hand one visitor's authorised response to another.
+
+import { requireAdmin } from './_lib/auth.js';
+
 let cache = null;
 let cacheTimestamp = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
@@ -9,13 +14,11 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 const SOURCE_URL = 'https://bigpara.hurriyet.com.tr/altin/';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Cache-Control', 'private, no-store');
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+  if (!requireAdmin(req, res)) return;
 
   const now = Date.now();
   if (cache && (now - cacheTimestamp) < CACHE_DURATION) {

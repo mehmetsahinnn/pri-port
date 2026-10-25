@@ -1,51 +1,21 @@
-// Vercel Serverless Function — Verify Admin Session Token
-// Endpoint: POST /api/admin-verify   body: { token }
-// Returns 200 { ok: true } if signature + expiry are valid, 401 otherwise.
+// Vercel Serverless Function — Check Admin Session
+// Endpoint: GET /api/admin-verify
+// Reads the HttpOnly session cookie. 200 { ok: true, exp } when the signature
+// and expiry are valid, 401 { ok: false } otherwise.
 
-import crypto from 'crypto';
+import { getSession } from './_lib/auth.js';
 
 export default function handler(req, res) {
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Cache-Control', 'private, no-store');
 
-  if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(204).end();
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', 'GET');
+    return res.status(405).json({ error: 'Method not allowed' });
   }
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (!process.env.ADMIN_SECRET) return res.status(500).json({ error: 'Missing server config' });
 
-  const { ADMIN_SECRET } = process.env;
-  if (!ADMIN_SECRET) return res.status(500).json({ error: 'Missing server config' });
-
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch { body = {}; }
-  }
-  const token = body && body.token;
-  if (!token || typeof token !== 'string' || !token.includes('.')) {
-    return res.status(401).json({ ok: false });
-  }
-
-  const [payloadStr, sig] = token.split('.');
-  const expected = crypto.createHmac('sha256', ADMIN_SECRET).update(payloadStr).digest('hex');
-
-  // Timing-safe compare on equal-length hex strings.
-  const a = Buffer.from(sig, 'hex');
-  const b = Buffer.from(expected, 'hex');
-  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
-    return res.status(401).json({ ok: false });
-  }
-
-  let payload;
-  try {
-    payload = JSON.parse(Buffer.from(payloadStr, 'base64url').toString('utf8'));
-  } catch {
-    return res.status(401).json({ ok: false });
-  }
-  if (!payload || payload.sub !== 'admin' || typeof payload.exp !== 'number' || payload.exp < Date.now()) {
-    return res.status(401).json({ ok: false });
-  }
-
-  return res.status(200).json({ ok: true, exp: payload.exp });
+  const session = getSession(req);
+  if (!session) return res.status(401).json({ ok: false });
+  return res.status(200).json({ ok: true, exp: session.exp });
 }

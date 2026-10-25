@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Yönetim Paneli - Mehmet Şahin</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="assets/css/fonts.css">
+    <link rel="stylesheet" href="assets/css/unicons.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        .panel { min-height: 100vh; max-width: 900px; margin: 0 auto; padding: 6rem 1rem 2rem; }
+        .panel__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        .panel__head h1 { font-size: var(--h1-font-size); color: var(--title-color); }
+        .panel__meta { color: var(--text-color); font-size: var(--small-font-size); margin-top: .25rem; }
+        .panel__group { color: var(--title-color); font-size: var(--h3-font-size); margin: 2rem 0 1rem; }
+        .panel__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+        .tool { display: block; background: var(--container-color); border-radius: 1rem; padding: 1.5rem; text-decoration: none;
+                box-shadow: 0 2px 16px hsla(var(--hue-color), 66%, 45%, .15); transition: transform .3s; }
+        .tool:hover { transform: translateY(-4px); }
+        .tool i { font-size: 1.75rem; color: var(--first-color); }
+        .tool h3 { color: var(--title-color); margin: .5rem 0 .25rem; font-size: var(--h3-font-size); }
+        .tool p { color: var(--text-color); font-size: var(--small-font-size); }
+        .panel__state { color: var(--text-color); text-align: center; padding: 3rem 0; }
+        .panel__actions { display: flex; gap: .75rem; flex-wrap: wrap; }
+        .panel__actions .button { cursor: pointer; border: 0; }
+        body.dark-theme .tool { box-shadow: 0 2px 16px hsla(0, 0%, 0%, .3); }
+    </style>
+</head>
+<body>
+<header class="header" id="header">
+    <nav class="nav container">
+        <a href="/" class="nav__logo">Mehmet Şahin</a>
+        <div class="nav__btns">
+            <button class="change-theme" id="theme-button" title="Tema" aria-label="Temayı değiştir">
+                <i class="uil uil-moon"></i>
+            </button>
+        </div>
+    </nav>
+</header>
+
+<main class="panel">
+    <div class="panel__head">
+        <div>
+            <h1>Yönetim Paneli</h1>
+            <p class="panel__meta" id="session-info">Oturum kontrol ediliyor…</p>
+        </div>
+        <div class="panel__actions">
+            <a href="/" class="button button--flex"><i class="uil uil-estate button__icon"></i> Ana Sayfa</a>
+            <button type="button" class="button button--flex" id="logout-btn"><i class="uil uil-signout button__icon"></i> Çıkış</button>
+        </div>
+    </div>
+
+    <p class="panel__state" id="state">Yükleniyor…</p>
+    <div id="tools" hidden></div>
+</main>
+
+<script type="module">
+    import { initTheme } from './assets/js/modules/theme.js';
+    initTheme();
+
+    const stateEl = document.getElementById('state');
+    const toolsEl = document.getElementById('tools');
+    const infoEl = document.getElementById('session-info');
+
+    const GROUPS = [
+        { type: 'page', title: 'Gizli Sayfalar' },
+        { type: 'api', title: 'API Uçları' },
+    ];
+
+    function toolCard(tool) {
+        const a = document.createElement('a');
+        a.className = 'tool';
+        a.href = tool.href;
+        if (tool.type === 'api') { a.target = '_blank'; a.rel = 'noopener'; }
+
+        const icon = document.createElement('i');
+        icon.className = `uil ${tool.icon}`;
+        const title = document.createElement('h3');
+        title.textContent = tool.title;
+        const desc = document.createElement('p');
+        desc.textContent = tool.description;
+        a.append(icon, title, desc);
+        return a;
+    }
+
+    function render(tools) {
+        toolsEl.replaceChildren();
+        for (const group of GROUPS) {
+            const items = tools.filter((tool) => tool.type === group.type);
+            if (!items.length) continue;
+            const heading = document.createElement('h2');
+            heading.className = 'panel__group';
+            heading.textContent = group.title;
+            const grid = document.createElement('div');
+            grid.className = 'panel__grid';
+            items.forEach((tool) => grid.append(toolCard(tool)));
+            toolsEl.append(heading, grid);
+        }
+        stateEl.hidden = true;
+        toolsEl.hidden = false;
+    }
+
+    async function load() {
+        try {
+            const res = await fetch('/api/admin-tools', { credentials: 'same-origin', cache: 'no-store' });
+            if (res.status === 401) { window.location.replace('/'); return; }
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const { tools, exp } = await res.json();
+            infoEl.textContent = `Oturum: ${new Date(exp).toLocaleString('tr-TR')} tarihine kadar geçerli`;
+            render(tools);
+        } catch (err) {
+            console.error(err);
+            infoEl.textContent = '';
+            stateEl.textContent = 'Panel yüklenemedi. Sunucu yapılandırmasını (ADMIN_* ortam değişkenleri) kontrol edin.';
+        }
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        try {
+            await fetch('/api/admin-logout', { method: 'POST', credentials: 'same-origin' });
+        } finally {
+            window.location.replace('/');
+        }
+    });
+
+    load();
+</script>
+</body>
+</html>

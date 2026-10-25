@@ -1,0 +1,8 @@
+{
+  "name": "pri-port-site",
+  "private": true,
+  "description": "Vercel root directory is src/, so this is the package.json Vercel reads for the Node version.",
+  "engines": {
+    "node": "24.x"
+  }
+}

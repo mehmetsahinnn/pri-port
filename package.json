@@ -5,7 +5,9 @@
   "main": "src/api/hello.js",
   "scripts": {
     "dev": "vercel dev",
+    "dev:local": "node scripts/dev-server.mjs",
     "build": "echo 'Static site - no build needed'",
+    "build:private": "node scripts/build-private.mjs",
     "start": "npx serve src"
   },
   "keywords": [
@@ -17,6 +19,6 @@
   "license": "MIT",
   "devDependencies": {},
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   }
 }

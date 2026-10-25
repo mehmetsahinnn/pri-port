@@ -3,21 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+
+    <title>Mehmet Şahin | Backend Developer</title>
+    <meta name="description" content="Mehmet Şahin — Backend developer at Turkcell building high-traffic microservices. M.Sc. candidate in Computer Engineering at Istanbul Technical University. Java, Spring Boot, Kafka, Redis.">
+    <meta name="author" content="Mehmet Şahin">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mehmet Şahin | Backend Developer">
+    <meta property="og:description" content="Backend developer at Turkcell building high-traffic microservices. M.Sc. candidate at Istanbul Technical University.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="tr_TR">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Mehmet Şahin | Backend Developer">
+    <meta name="twitter:description" content="Backend developer at Turkcell building high-traffic microservices. M.Sc. candidate at Istanbul Technical University.">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Mehmet Şahin",
+        "jobTitle": "Backend Developer",
+        "worksFor": { "@type": "Organization", "name": "Turkcell" },
+        "alumniOf": [
+            { "@type": "CollegeOrUniversity", "name": "Eskisehir Technical University" },
+            { "@type": "CollegeOrUniversity", "name": "Istanbul Technical University" }
+        ],
+        "knowsAbout": ["Java", "Spring Boot", "Microservices", "Kafka", "Redis", "REST APIs"],
+        "sameAs": [
+            "https://www.linkedin.com/in/msahinnn/",
+            "https://github.com/mehmetsahinnn"
+        ]
+    }
+    </script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!-- Fonts are self-hosted: no third-party requests, and the main font is preloaded. -->
+    <link rel="preload" href="assets/fonts/poppins/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/css/fonts.css">
+    <link rel="stylesheet" href="assets/css/unicons.css">
     <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
-
-    <title>Mehmet Şahin</title>
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/src/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/src/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/src/favicon-16x16.png">
-    <link rel="manifest" href="/src/site.webmanifest">
 </head>
 <body>
 
 <header class="header" id="header">
-    <nav class="nav container">
+    <nav class="nav container" aria-label="Main">
         <a href="#" class="nav__logo">Mehmet Şahin</a>
         <div class="nav__menu" id="nav-menu">
             <ul class="nav__list grid">
@@ -46,28 +82,22 @@
                         <i class="uil uil-message nav_icon"></i> <span data-i18n="nav_contact">Contact Me</span>
                     </a>
                 </li>
-                <li class="nav__item admin-menu" id="admin-menu" style="display: none;">
-                    <a href="#" class="nav__link admin-link" id="api-menu-toggle">
-                        <i class="uil uil-setting nav_icon"></i> API Access
+                <li class="nav__item" id="admin-menu" style="display: none;">
+                    <a href="/admin.html" class="nav__link">
+                        <i class="uil uil-setting nav_icon"></i> <span data-i18n="admin_panel">Admin Panel</span>
                     </a>
-                    <ul class="admin-submenu" id="api-submenu">
-                        <li><a href="/api/hello" target="_blank" class="admin-submenu-link">Hello API</a></li>
-                        <li><a href="/api/gold" target="_blank" class="admin-submenu-link">Gold API</a></li>
-                        <li><a href="/gold.html" target="_blank" class="admin-submenu-link">Gold Page</a></li>
-                        <li><a href="/nazar.html" target="_blank" class="admin-submenu-link">🧿 Nazar Duaları</a></li>
-                    </ul>
                 </li>
             </ul>
-            <i class="uil uil-times nav__close" id="nav-close"></i>
+            <i class="uil uil-times nav__close" id="nav-close" role="button" tabindex="0" aria-label="Close menu"></i>
         </div>
         <div class="nav__btns">
             <div class="nav__btns-group" role="group" aria-label="Preferences">
-                <button class="lang-button" id="lang-button" title="Language">EN</button>
+                <button class="lang-button" id="lang-button" title="Language" aria-label="Switch language">EN</button>
                 <button class="change-theme" id="theme-button" title="Theme" aria-label="Toggle theme">
                     <i class="uil uil-moon"></i>
                 </button>
             </div>
-            <div class="nav__toggle" id="nav-toggle">
+            <div class="nav__toggle" id="nav-toggle" role="button" tabindex="0" aria-label="Open menu">
                 <i class="uil uil-apps"></i>
             </div>
         </div>
@@ -76,51 +106,35 @@
 
 <main class="main">
     <section class="home section" id="home">
-        <div class="home_container container grid">
-            <div class="home_content grid">
-                <div class="home_social">
-                    <a href="https://www.linkedin.com/in/msahinnn/" target="_blank" class="home__social-icon">
+        <div class="home__container container grid">
+            <div class="home__content grid">
+                <div class="home__social">
+                    <a href="https://www.linkedin.com/in/msahinnn/" target="_blank" rel="noopener noreferrer" class="home__social-icon" aria-label="LinkedIn">
                         <i class="uil uil-linkedin"></i>
                     </a>
-                    <a href="https://github.com/mehmetsahinnn" target="_blank" class="home__social-icon">
+                    <a href="https://github.com/mehmetsahinnn" target="_blank" rel="noopener noreferrer" class="home__social-icon" aria-label="GitHub">
                         <i class="uil uil-github"></i>
                     </a>
-                    <a href="https://www.linkedin.com/in/msahinnn/" target="_blank" class="home__social-icon">
-                        <i class="uil uil-twitter"></i>
+                    <a href="https://www.linkedin.com/in/msahinnn/" target="_blank" rel="noopener noreferrer" class="home__social-icon" aria-label="LinkedIn">
+                        <i class="uil uil-linkedin"></i>
                     </a>
                 </div>
-            </div>
-            <div class="home_img">
-            </div>
 
-            <div class="home__data">
+                <div class="home__data">
                 <h1 class="home__title" data-i18n="home_title">Hi, I'm Mehmet</h1>
-                <h3 class="home__title" data-i18n="home_subtitle">Backend Developer</h3>
+                <h2 class="home__title" data-i18n="home_subtitle">Backend Developer</h2>
                 <h3 class="home__subtitle" data-i18n="home_subtitle2">M.Sc. @ ITU | Turkcell</h3>
-                <p class="home__description" data-i18n="home_desc">Backend developer at Turkcell, working in a team which builds microservices that serve millions of users.
+                <p class="home__description" data-i18n="home_desc">Backend developer at Turkcell, working in a team that builds microservices that serve millions of users.
                     Pursuing M.Sc. in Computer Engineering at Istanbul Technical University.
                     Focused on scalable APIs, clean architecture, and developer tooling.</p>
 
-                <!-- Contact Button / Admin Dropdown -->
+                <!-- Becomes "Admin Panel" once an admin session is detected (see modules/admin.js). -->
                 <div class="home-contact-wrapper" id="home-contact-wrapper">
                     <a href="#contact" class="button button--flex" id="home-contact-btn">
                         <span data-i18n="contact_me">Contact Me</span><i class="uil uil-message button__icon"></i>
                     </a>
-                    <ul class="home-admin-submenu" id="home-admin-submenu" style="display: none;">
-                        <li><a href="/api/hello" target="_blank" class="home-admin-link">
-                            <i class="uil uil-brackets-curly"></i> Hello API
-                        </a></li>
-                        <li><a href="/api/gold" target="_blank" class="home-admin-link">
-                            <i class="uil uil-gold"></i> Gold API
-                        </a></li>
-                        <li><a href="/gold.html" target="_blank" class="home-admin-link">
-                            <i class="uil uil-chart-line"></i> Gold Page
-                        </a></li>
-                        <li><a href="/nazar.html" target="_blank" class="home-admin-link">
-                            <i class="uil uil-shield-check"></i> 🧿 Nazar Duaları
-                        </a></li>
-                    </ul>
                 </div>
+            </div>
             </div>
         </div>
     </section>
@@ -130,12 +144,13 @@
         <span class="section__subtitle" data-i18n="about_subtitle">My introduction</span>
 
         <div class="about__container container grid">
-            <img src="assets/img/mug.webp" alt="" class="about__img">
+            <img src="assets/img/mug.webp" width="720" height="720" loading="lazy" decoding="async"
+                 alt="Portrait of Mehmet Şahin" data-i18n-attr="alt:about_img_alt" class="about__img">
 
             <div class="about__data">
                 <p class="about__description" data-i18n="about_desc">
                     I work in a team that builds and maintains high-traffic backend services at Turkcell,
-                    working across service integrations, integrating some design patterns.
+                    working across service integrations and implementing design patterns.
                     Beyond my day job, I develop IDE plugins, macOS utilities, and monitoring tools.
                     Currently researching at ITU while shipping production code every week.
                 </p>
@@ -177,7 +192,7 @@
                     <div class="skills__header">
                         <i class="uil uil-brackets-curly skills__icon"></i>
                         <div>
-                            <h1 class="skills__title" data-i18n="skill_backend">Backend Development</h1>
+                            <h3 class="skills__title" data-i18n="skill_backend">Backend Development</h3>
                             <span class="skills__subtitle" data-i18n="more_2">More than 2 years</span>
                         </div>
                     </div>
@@ -192,7 +207,7 @@
                     <div class="skills__header">
                         <i class="uil uil-server skills__icon"></i>
                         <div>
-                            <h1 class="skills__title" data-i18n="skill_integration">Integration &amp; Data</h1>
+                            <h3 class="skills__title" data-i18n="skill_integration">Integration &amp; Data</h3>
                             <span class="skills__subtitle" data-i18n="more_2">More than 2 years</span>
                         </div>
                     </div>
@@ -207,7 +222,7 @@
                     <div class="skills__header">
                         <i class="uil uil-apps skills__icon"></i>
                         <div>
-                            <h1 class="skills__title" data-i18n="skill_languages">Languages &amp; Tools</h1>
+                            <h3 class="skills__title" data-i18n="skill_languages">Languages &amp; Tools</h3>
                             <span class="skills__subtitle" data-i18n="more_1">More than 1 year</span>
                         </div>
                     </div>
@@ -222,7 +237,7 @@
                     <div class="skills__header">
                         <i class="uil uil-window-grid skills__icon"></i>
                         <div>
-                            <h1 class="skills__title" data-i18n="skill_frontend">Frontend Development</h1>
+                            <h3 class="skills__title" data-i18n="skill_frontend">Frontend Development</h3>
                             <span class="skills__subtitle" data-i18n="more_3">More than 3 years</span>
                         </div>
                     </div>
@@ -236,18 +251,18 @@
         </div>
     </section>
 
-    <section class="qualification section">
+    <section class="qualification section" id="qualification">
         <h2 class="section__title" data-i18n="qual_title">Qualifications</h2>
         <div class="section__subtitle" data-i18n="qual_subtitle">My personal journey</div>
 
         <div class="qualification__container container">
             <div class="qualification__tabs">
-                <div class="qualification__button button--flex qualification__active" data-target="#education">
+                <div class="qualification__button button--flex qualification__active" data-target="#education" role="button" tabindex="0">
                     <i class="uil uil-graduation-cap qualification__icon"></i>
                     <span data-i18n="education">Education</span>
                 </div>
 
-                <div class="qualification__button button--flex" data-target="#work">
+                <div class="qualification__button button--flex" data-target="#work" role="button" tabindex="0">
                     <i class="uil uil-briefcase-alt qualification__icon"></i>
                     <span data-i18n="work">Work</span>
                 </div>
@@ -257,11 +272,11 @@
                 <div class="qualification__content qualification__active" data-content id="education">
                     <div class="qualification__data">
                         <div>
-                            <h3 class="qualification__title">M.Sc. in Computer Engineering</h3>
-                            <span class="qualification__subtitle">Istanbul Technical University</span>
+                            <h3 class="qualification__title" data-i18n="edu_msc_title">M.Sc. in Computer Engineering</h3>
+                            <span class="qualification__subtitle" data-i18n="edu_msc_school">Istanbul Technical University</span>
                             <div class="qualification__calendar">
                                 <i class="uil uil-calendar-alt"></i>
-                                October, 2025 - June, 2027
+                                <span data-i18n="edu_msc_date">October, 2025 - June, 2027</span>
                             </div>
                         </div>
 
@@ -279,23 +294,22 @@
                         </div>
 
                         <div>
-                            <h3 class="qualification__title">B.Sc. in Computer Engineering</h3>
-                            <span class="qualification__subtitle">Eskisehir Technical University</span>
+                            <h3 class="qualification__title" data-i18n="edu_bsc_title">B.Sc. in Computer Engineering</h3>
+                            <span class="qualification__subtitle" data-i18n="edu_bsc_school">Eskisehir Technical University</span>
                             <div class="qualification__calendar">
                                 <i class="uil uil-calendar-alt"></i>
-                                September, 2020 - June, 2025
+                                <span data-i18n="edu_bsc_date">September, 2020 - June, 2025</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="qualification__data">
                         <div>
-                            <h3 class="qualification__title">
-                                Web Programming with React Certificate</h3>
+                            <h3 class="qualification__title" data-i18n="edu_react_title">Web Programming with React Certificate</h3>
                             <span class="qualification__subtitle">BTK Akademi</span>
                             <div class="qualification__calendar">
                                 <i class="uil uil-calendar-alt"></i>
-                                August 2023
+                                <span data-i18n="edu_react_date">August 2023</span>
                             </div>
                         </div>
 
@@ -312,11 +326,11 @@
                         </div>
 
                         <div>
-                            <h3 class="qualification__title">Mid-Level Web Development With Java Certificate</h3>
+                            <h3 class="qualification__title" data-i18n="edu_java_title">Mid-Level Web Development With Java Certificate</h3>
                             <span class="qualification__subtitle">Patika Dev</span>
                             <div class="qualification__calendar">
                                 <i class="uil uil-calendar-alt"></i>
-                                July 2023
+                                <span data-i18n="edu_java_date">July 2023</span>
                             </div>
                         </div>
                     </div>
@@ -325,11 +339,11 @@
                 <div class="qualification__content" data-content id="work">
                     <div class="qualification__data">
                         <div>
-                            <h3 class="qualification__title">Software Developer</h3>
+                            <h3 class="qualification__title" data-i18n="work_dev_title">Software Developer</h3>
                             <span class="qualification__subtitle">Turkcell</span>
                             <div class="qualification__calendar">
                                 <i class="uil uil-calendar-alt"></i>
-                                July, 2025 -
+                                <span data-i18n="work_dev_date">July, 2025 - Present</span>
                             </div>
                         </div>
 
@@ -346,23 +360,22 @@
                             <span class="qualification__line"></span>
                         </div>
                         <div>
-                            <h3 class="qualification__title">
-                                Part Time Software Developer</h3>
+                            <h3 class="qualification__title" data-i18n="work_part_title">Part Time Software Developer</h3>
                             <span class="qualification__subtitle">Turkcell</span>
                             <div class="qualification__calendar">
                                 <i class="uil uil-calendar-alt"></i>
-                                August, 2024 - July, 2025
+                                <span data-i18n="work_part_date">August, 2024 - July, 2025</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="qualification__data">
                         <div>
-                            <h3 class="qualification__title">Intern</h3>
+                            <h3 class="qualification__title" data-i18n="work_intern_title">Intern</h3>
                             <span class="qualification__subtitle">Galaksiya Bilişim Teknolojileri</span>
                             <div class="qualification__calendar">
                                 <i class="uil uil-calendar-alt"></i>
-                                April, 2024 - July, 2024
+                                <span data-i18n="work_intern_date">April, 2024 - July, 2024</span>
                             </div>
                         </div>
 
@@ -370,7 +383,7 @@
                             <span class="qualification__rounder"></span>
                         </div>
                     </div>
-                  </div>
+                </div>
             </div>
         </div>
     </section>
@@ -382,42 +395,45 @@
         <div class="portfolio__container container swiper-container">
             <div class="swiper-wrapper">
                 <div class="portfolio__content grid swiper-slide">
-                    <img src="assets/img/portfolio1.jpg" alt="Blog-Website" class="portfolio__img">
+                    <img src="assets/img/portfolio1.webp" width="640" height="298" loading="lazy" decoding="async"
+                         alt="Screenshot of the Blog Website project" data-i18n-attr="alt:p1_img_alt" class="portfolio__img">
                     <div class="portfolio__data">
                         <h3 class="portfolio__title">Blog Website</h3>
-                        <p class="portfolio__description"> Explore engaging content, easily filter topics, and discover
+                        <p class="portfolio__description" data-i18n="p1_desc">Explore engaging content, easily filter topics, and discover
                             a wide array of categories. Join me for regular updates and let's embark on a journey of
                             learning and inspiration together.</p>
-                        <a href="https://blog-ota34cxh5-mehmetsahinnn.vercel.app/" target="_blank"
+                        <a href="https://blog-ota34cxh5-mehmetsahinnn.vercel.app/" target="_blank" rel="noopener noreferrer"
                            class="button button--flex button--small portfolio__button">Blog Website
                             <i class="uil uil-arrow-right button__icon"></i>
                         </a>
                     </div>
                 </div>
                 <div class="portfolio__content grid swiper-slide">
-                    <img src="assets/img/gym.png" alt="Gym-Management-System" class="portfolio__img">
+                    <img src="assets/img/gym.webp" width="640" height="301" loading="lazy" decoding="async"
+                         alt="Screenshot of the Gym Management System dashboard" data-i18n-attr="alt:p2_img_alt" class="portfolio__img">
 
                     <div class="portfolio__data">
                         <h3 class="portfolio__title">Gym Management System</h3>
-                        <p class="portfolio__description">Experience the power of our Gym Management System,
+                        <p class="portfolio__description" data-i18n="p2_desc">Experience the power of our Gym Management System,
                             where you can effortlessly track your earnings, monitor machines, manage members,
                             oversee equipment inventory, and streamline payments. Our intuitive interface allows you to
                             seamlessly access staff information while also previewing upcoming maintenance schedules.
                             With advanced filtering options, you'll have complete control over your gym's data, making
                             management more efficient than ever before.</p>
-                        <a href="https://github.com/mehmetsahinnn/Spring-GymManagementSystem" target="_blank"
+                        <a href="https://github.com/mehmetsahinnn/Spring-GymManagementSystem" target="_blank" rel="noopener noreferrer"
                            class="button button--flex button--small portfolio__button">Gym Management System
                             <i class="uil uil-arrow-right button__icon"></i>
                         </a>
                     </div>
                 </div>
                 <div class="portfolio__content grid swiper-slide">
-                    <img src="assets/img/namef.png" alt="name-finder" class="portfolio__img">
+                    <img src="assets/img/namef.webp" width="432" height="248" loading="lazy" decoding="async"
+                         alt="Healthyvities logo" data-i18n-attr="alt:p3_img_alt" class="portfolio__img">
                     <div class="portfolio__data">
                         <h3 class="portfolio__title">Healthyvities</h3>
-                        <p class="portfolio__description">
+                        <p class="portfolio__description" data-i18n="p3_desc">
                             🏋️ Activity Tracking:
-                            Record your activities like walking, running .
+                            Record your activities like walking and running.
                             Weekly and monthly health and activity statistics graphs. Track your goals.
                             <br>
                             🥦 Nutrition Diary:
@@ -425,26 +441,18 @@
                             <br>
                             ⚕️ Health Advice:
                             Get personalized health and exercise recommendations based on your health data.
-                            </p>
-                        <a href="https://github.com/mehmetsahinnn/HealthyVities" target="_blank"
+                        </p>
+                        <a href="https://github.com/mehmetsahinnn/HealthyVities" target="_blank" rel="noopener noreferrer"
                            class="button button--flex button--small portfolio__button">Healthyvities
                             <i class="uil uil-arrow-right button__icon"></i>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="swiper-button-next">
+            <div class="swiper-button-next" aria-label="Next project">
                 <i class="uil uil-angle-right-b swiper-portfolio-icon"></i>
             </div>
-            <div class="swiper-button-prev">
-                <i class="uil uil-angle-left-b swiper-portfolio-icon"></i>
-            </div>
-
-            <div class="swiper-pagination"></div>
-            <div class="swiper-button-next">
-                <i class="uil uil-angle-right-b swiper-portfolio-icon"></i>
-            </div>
-            <div class="swiper-button-prev">
+            <div class="swiper-button-prev" aria-label="Previous project">
                 <i class="uil uil-angle-left-b swiper-portfolio-icon"></i>
             </div>
 
@@ -473,7 +481,7 @@
 
                     <div>
                         <h3 class="contact__title" data-i18n="location">Location</h3>
-                        <span class="contact__subtitle" data-i18n="location_value">Bursa, Turkey</span>
+                        <span class="contact__subtitle" data-i18n="location_value">Istanbul/Bursa, Turkey</span>
                     </div>
                 </div>
 
@@ -486,7 +494,7 @@
                     </div>
                 </div>
 
-                <a href="https://www.linkedin.com/in/msahinnn/" target="_blank" class="button button--flex" style="margin-top: 1.5rem;">
+                <a href="https://www.linkedin.com/in/msahinnn/" target="_blank" rel="noopener noreferrer" class="button button--flex" style="margin-top: 1.5rem;">
                     <span data-i18n="connect_linkedin">Connect on LinkedIn</span><i class="uil uil-linkedin button__icon"></i>
                 </a>
             </div>
@@ -499,7 +507,7 @@
     <div class="footer__bg">
         <div class="footer__container container grid">
             <div>
-                <h1 class="footer__title">Mehmet</h1>
+                <h2 class="footer__title">Mehmet</h2>
                 <span class="footer__subtitle" data-i18n="footer_subtitle">Backend Developer</span>
             </div>
 
@@ -520,15 +528,15 @@
             </ul>
 
             <div class="footer__socials">
-                <a href="https://github.com/mehmetsahinnn" class="footer__social" target="_blank">
+                <a href="https://github.com/mehmetsahinnn" class="footer__social" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                     <i class="uil uil-github"></i>
                 </a>
 
-                <a href="https://www.instagram.com/mwsahin/" target="_blank" class="footer__social">
+                <a href="https://www.instagram.com/mwsahin/" target="_blank" rel="noopener noreferrer" class="footer__social" aria-label="Instagram">
                     <i class="uil uil-instagram"></i>
                 </a>
 
-                <a href="https://www.linkedin.com/in/msahinnn/" target="_blank" class="footer__social">
+                <a href="https://www.linkedin.com/in/msahinnn/" target="_blank" rel="noopener noreferrer" class="footer__social" aria-label="LinkedIn">
                     <i class="uil uil-linkedin-alt"></i>
                 </a>
             </div>
@@ -539,24 +547,26 @@
 
 </footer>
 
-<div id="admin-modal" class="admin-modal" style="display: none;">
+<div id="admin-modal" class="admin-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
     <div class="admin-modal-content">
-        <span class="admin-close">&times;</span>
-        <h3>Admin Login</h3>
+        <span class="admin-close" role="button" tabindex="0" aria-label="Close">&times;</span>
+        <h3 id="admin-modal-title" data-i18n="admin_login_title">Admin Login</h3>
         <form id="admin-login-form">
-            <input type="text" id="admin-username" placeholder="Username" required>
-            <input type="password" id="admin-password" placeholder="Password" required>
-            <button type="submit" class="button button--flex">Login</button>
-            <p id="login-error" style="color: red; display: none; margin-top: 10px;">Invalid credentials!</p>
+            <input type="text" id="admin-username" autocomplete="username" required
+                   placeholder="Username" data-i18n-attr="placeholder:admin_username">
+            <input type="password" id="admin-password" autocomplete="current-password" required
+                   placeholder="Password" data-i18n-attr="placeholder:admin_password">
+            <button type="submit" class="button button--flex" data-i18n="admin_login_btn">Login</button>
+            <p id="login-error" role="alert" style="color: red; display: none; margin-top: 10px;"></p>
         </form>
     </div>
 </div>
 
-<a href="" class="scrollup" id="scroll-up">
+<a href="#home" class="scrollup" id="scroll-up" aria-label="Scroll to top">
     <i class="uil uil-arrow-up scroll__icon"></i>
 </a>
 <script src="assets/js/swiper-bundle.min.js"></script>
-<script src="assets/js/main.js"></script>
+<script type="module" src="assets/js/main.js"></script>
 
 </body>
 </html>
