@@ -1,4 +1,4 @@
-import { getItem, setItem } from './storage.js';
+import { getItem, setItem } from './storage.js?v=20261025';
 
 const DARK_CLASS = 'dark-theme';
 const SUN_ICON = 'uil-sun';
