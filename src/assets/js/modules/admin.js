@@ -5,7 +5,7 @@
 // knows is the answer of /api/admin-verify, which decides whether the nav shows
 // the "Admin Panel" link. All real tools live behind that cookie on the server.
 
-import { applyLang, t } from './i18n.js?v=20261025';
+import { applyLang, t } from './i18n.js?v=20261026';
 
 const TRIGGER_CLICKS = 3;
 const TRIGGER_WINDOW_MS = 800;

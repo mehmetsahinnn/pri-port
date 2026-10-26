@@ -2,7 +2,7 @@
 // the admin panel). The static markup in index.html is the fallback: it stays in
 // place if the request fails, so the section is never empty.
 
-import { getLang } from './i18n.js?v=20261025';
+import { getLang } from './i18n.js?v=20261026';
 
 let data = null;
 

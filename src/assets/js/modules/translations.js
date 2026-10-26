@@ -27,14 +27,10 @@ export const translations = {
         download_cv: "Download CV",
 
         skills_title: "Skills",
-        skills_subtitle: "My technical level",
+        skills_subtitle: "What I work with",
         skill_backend: "Backend Development",
         skill_integration: "Integration & Data",
         skill_languages: "Languages & Tools",
-        skill_frontend: "Frontend Development",
-        more_1: "More than 1 year",
-        more_2: "More than 2 years",
-        more_3: "More than 3 years",
 
         qual_title: "Qualifications",
         qual_subtitle: "My personal journey",
@@ -115,14 +111,10 @@ export const translations = {
         download_cv: "CV İndir",
 
         skills_title: "Yetenekler",
-        skills_subtitle: "Teknik seviyem",
+        skills_subtitle: "Kullandığım teknolojiler",
         skill_backend: "Backend Geliştirme",
         skill_integration: "Entegrasyon & Veri",
         skill_languages: "Diller & Araçlar",
-        skill_frontend: "Frontend Geliştirme",
-        more_1: "1 yıldan fazla",
-        more_2: "2 yıldan fazla",
-        more_3: "3 yıldan fazla",
 
         qual_title: "Nitelikler",
         qual_subtitle: "Kişisel yolculuğum",

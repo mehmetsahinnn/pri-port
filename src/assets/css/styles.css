@@ -1532,3 +1532,12 @@ img{
         transition-duration: .01ms !important;
     }
 }
+
+/* An odd last skills card sits centered under the pair instead of hugging the left edge. */
+@media screen and (min-width: 768px) {
+    .skills__content:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: calc(50% - .75rem);
+    }
+}

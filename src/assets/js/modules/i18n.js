@@ -1,5 +1,5 @@
-import { translations } from './translations.js?v=20261025';
-import { getItem, setItem } from './storage.js?v=20261025';
+import { translations } from './translations.js?v=20261026';
+import { getItem, setItem } from './storage.js?v=20261026';
 
 const DEFAULT_LANG = 'en';
 const LANG_KEY = 'selected-lang';
