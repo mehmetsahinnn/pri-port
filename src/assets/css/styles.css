@@ -1459,3 +1459,76 @@ img{
     font-size: 1rem;
 }
 
+
+/*==================== UX REFINEMENTS ====================*/
+/* Keyboard focus (visible, consistent). The swiper controls used to hide it. */
+:focus-visible{
+    outline: 2px solid var(--first-color);
+    outline-offset: 3px;
+    border-radius: .25rem;
+}
+
+.swiper-button-prev:focus-visible,
+.swiper-button-next:focus-visible,
+.swiper-pagination-bullet:focus-visible{
+    outline: 2px solid var(--first-color);
+}
+
+/* Fitts's Law: pointer / touch targets of at least 44x44px. */
+.home__social-icon,
+.footer__social{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin-right: 0;
+}
+
+.change-theme,
+.lang-button,
+.nav__toggle{
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swiper-pagination-bullet{
+    position: relative;
+    width: .75rem;
+    height: .75rem;
+}
+
+.swiper-pagination-bullet::after{
+    content: '';
+    position: absolute;
+    inset: -.75rem;
+}
+
+.nav__link,
+.qualification__button{
+    min-height: 44px;
+}
+
+.contact__link{
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.contact__link:hover{
+    color: var(--first-color);
+}
+
+@media (prefers-reduced-motion: reduce){
+    html{
+        scroll-behavior: auto !important;
+    }
+    *,
+    *::before,
+    *::after{
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
